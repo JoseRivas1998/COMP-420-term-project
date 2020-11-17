@@ -1,24 +1,17 @@
 package edu.csuci.comp420term.datageneration;
 
-import org.apache.commons.io.IOUtils;
+import edu.csuci.comp420term.entities.Ability;
 import org.apache.commons.text.WordUtils;
-import org.apache.http.HttpEntity;
-import org.apache.http.HttpResponse;
-import org.apache.http.client.HttpClient;
-import org.apache.http.client.methods.HttpGet;
-import org.apache.http.impl.client.HttpClients;
 import org.json.JSONArray;
-import org.json.JSONException;
 import org.json.JSONObject;
 
 import java.io.IOException;
-import java.io.InputStream;
-import java.io.StringWriter;
-import java.nio.charset.StandardCharsets;
-import java.util.ArrayList;
 import java.util.List;
 import java.util.Optional;
 import java.util.function.Predicate;
+
+import static edu.csuci.comp420term.datageneration.JSONApiHelpers.fetchAPICall;
+import static edu.csuci.comp420term.entities.JSONEntity.filterJsonArray;
 
 
 public class PokemonScraper {
@@ -31,7 +24,7 @@ public class PokemonScraper {
         mainApiEndpoint = String.format("https://pokeapi.co/api/v2/pokemon/%d", pokedexId);
     }
 
-    public JSONObject scrape() throws Exception{
+    public JSONObject scrape() throws Exception {
         final JSONObject pokemonJSON = fetchPokemonJSON();
         final String pokemonName = WordUtils.capitalize(pokemonJSON.getString("name"));
 
@@ -50,9 +43,9 @@ public class PokemonScraper {
         final Predicate<JSONObject> isAbilityHidden = ability -> ability.getBoolean("is_hidden");
         final List<JSONObject> nonHiddenAbilities = filterJsonArray(abilities, Predicate.not(isAbilityHidden));
         final List<JSONObject> hiddenAbilities = filterJsonArray(abilities, isAbilityHidden);
-        final Optional<String> primaryAbility = optionalAbilityNameAtIndex(nonHiddenAbilities, 0);
-        final Optional<String> secondaryAbility = optionalAbilityNameAtIndex(nonHiddenAbilities, 1);
-        final Optional<String> hiddenAbility = optionalAbilityNameAtIndex(hiddenAbilities, 0);
+        final Ability primaryAbility = getAbilityFromIndex(nonHiddenAbilities, 0);
+        final Optional<Ability> secondaryAbility = optionalAbilityAtIndex(nonHiddenAbilities, 1);
+        final Optional<Ability> hiddenAbility = optionalAbilityAtIndex(hiddenAbilities, 0);
 
         final String description = getDescription(speciesJSON);
 
@@ -64,9 +57,9 @@ public class PokemonScraper {
         pokemonRowData.put("primary_egg_group", primaryEggGroup.orElse(null));
         pokemonRowData.put("secondary_egg_group", secondaryEggGroup.orElse(null));
         pokemonRowData.put("image_file_path", imageUrl);
-        pokemonRowData.put("primary_ability", primaryAbility.orElse(null));
-        pokemonRowData.put("secondary_ability", secondaryAbility.orElse(null));
-        pokemonRowData.put("hidden_ability", hiddenAbility.orElse(null));
+        pokemonRowData.put("primary_ability", primaryAbility.toJSON());
+        secondaryAbility.ifPresent(ability -> pokemonRowData.put("secondary_ability", ability.toJSON()));
+        hiddenAbility.ifPresent(ability -> pokemonRowData.put("hidden_ability", ability.toJSON()));
         pokemonRowData.put("description", description);
         return pokemonRowData;
     }
@@ -79,14 +72,15 @@ public class PokemonScraper {
         return description.replace('\n', ' ').replaceAll("\f", " ");
     }
 
-    private Optional<String> optionalAbilityNameAtIndex(List<JSONObject> abilities, int abilityIndex) {
-        return abilities.size() > abilityIndex ? Optional.of(getAbilityNameFromIndex(abilities, abilityIndex)) : Optional.empty();
+    private Optional<Ability> optionalAbilityAtIndex(List<JSONObject> abilities, int abilityIndex) throws IOException {
+        return abilities.size() > abilityIndex ? Optional.of(getAbilityFromIndex(abilities, abilityIndex)) : Optional.empty();
     }
 
-    private String getAbilityNameFromIndex(List<JSONObject> abilities, int abilityIndex) {
+    private Ability getAbilityFromIndex(List<JSONObject> abilities, int abilityIndex) throws IOException {
         final JSONObject abilitySlot = abilities.get(abilityIndex);
         final JSONObject ability = abilitySlot.getJSONObject("ability");
-        return ability.getString("name");
+        AbilityGenerator generator = new AbilityGenerator(ability.getString("url"));
+        return generator.generate();
     }
 
     private String getImageUrl(JSONObject pokemonJSON) {
@@ -94,19 +88,6 @@ public class PokemonScraper {
         final JSONObject otherSprites = spritesJSON.getJSONObject("other");
         final JSONObject officialArtworkJSON = otherSprites.getJSONObject("official-artwork");
         return officialArtworkJSON.getString("front_default");
-    }
-
-    private static List<JSONObject> filterJsonArray(JSONArray jsonArray, Predicate<JSONObject> predicate) {
-        List<JSONObject> result = new ArrayList<>();
-        for (int i = 0; i < jsonArray.length(); i++) {
-            try {
-                final JSONObject jsonObject = jsonArray.getJSONObject(i);
-                if (predicate.test(jsonObject)) result.add(jsonObject);
-            } catch (JSONException ignored) {
-
-            }
-        }
-        return result;
     }
 
     private Optional<String> optionalEggGroupNameAtIndex(JSONArray eggGroups, int eggGroupIndex) {
@@ -138,20 +119,5 @@ public class PokemonScraper {
         return fetchAPICall(this.mainApiEndpoint);
     }
 
-    private JSONObject fetchAPICall(String apiEndpoint) throws IOException {
-        final HttpClient httpClient = HttpClients.createDefault();
-        final HttpGet getRequest = new HttpGet(apiEndpoint);
-        final HttpResponse httpResponse = httpClient.execute(getRequest);
-        final HttpEntity httpResponseEntity = httpResponse.getEntity();
-        String responseBody = "";
-        if (httpResponseEntity != null) {
-            try (InputStream inputStream = httpResponseEntity.getContent()) {
-                StringWriter writer = new StringWriter();
-                IOUtils.copy(inputStream, writer, StandardCharsets.UTF_8);
-                responseBody = writer.toString();
-            }
-        }
-        return new JSONObject(responseBody);
-    }
 
 }
