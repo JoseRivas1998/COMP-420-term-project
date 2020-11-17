@@ -11,4 +11,8 @@ repositories {
 
 dependencies {
     testCompile group: 'junit', name: 'junit', version: '4.12'
+    implementation 'org.json:json:20201115'
+    implementation 'org.apache.httpcomponents:httpclient:4.5.3'
+    implementation 'commons-io:commons-io:2.5'
+    implementation 'org.apache.commons:commons-text:1.9'
 }
