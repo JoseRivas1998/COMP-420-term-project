@@ -1,1 +1,1 @@
-# 420-term-project
+# COMP-420-term-project
