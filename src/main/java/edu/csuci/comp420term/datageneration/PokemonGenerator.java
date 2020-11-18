@@ -2,6 +2,7 @@ package edu.csuci.comp420term.datageneration;
 
 import edu.csuci.comp420term.entities.Ability;
 import edu.csuci.comp420term.entities.EggGroup;
+import edu.csuci.comp420term.entities.Pokemon;
 import edu.csuci.comp420term.entities.Type;
 import org.apache.commons.text.WordUtils;
 import org.json.JSONArray;
@@ -30,7 +31,7 @@ public class PokemonGenerator {
         mainApiEndpoint = String.format("https://pokeapi.co/api/v2/pokemon/%d", pokedexId);
     }
 
-    public JSONObject generate() throws Exception {
+    public Pokemon generate() throws Exception {
         final JSONObject pokemonJSON = fetchPokemonJSON();
         final String pokemonName = WordUtils.capitalize(pokemonJSON.getString("name"));
 
@@ -68,7 +69,19 @@ public class PokemonGenerator {
         secondaryAbility.ifPresent(ability -> pokemonRowData.put("secondary_ability", ability.toJSON()));
         hiddenAbility.ifPresent(ability -> pokemonRowData.put("hidden_ability", ability.toJSON()));
         pokemonRowData.put("description", description);
-        return pokemonRowData;
+        return new Pokemon(
+                this.pokedexId,
+                primaryType,
+                secondaryType.orElse(null),
+                primaryEggGroup,
+                secondaryEggGroup.orElse(null),
+                primaryAbility,
+                secondaryAbility.orElse(null),
+                hiddenAbility.orElse(null),
+                pokemonName,
+                description,
+                imageUrl
+        );
     }
 
     private String getDescription(JSONObject speciesJSON) {

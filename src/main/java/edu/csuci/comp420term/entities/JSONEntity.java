@@ -18,7 +18,7 @@ public abstract class JSONEntity {
     }
 
     public String toString(int indentFactor) {
-        return toJSON().toString();
+        return toJSON().toString(indentFactor);
     }
 
     public static List<JSONObject> filterJsonArray(JSONArray jsonArray, Predicate<JSONObject> predicate) {
