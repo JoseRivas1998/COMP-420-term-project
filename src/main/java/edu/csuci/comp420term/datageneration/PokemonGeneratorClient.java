@@ -161,6 +161,9 @@ public class PokemonGeneratorClient {
         try (FileWriter sqlFileWriter = new FileWriter(SQL_FILE_NAME, StandardCharsets.UTF_8)) {
             sqlFileWriter.write(sqlFileContent);
         }
+
+        JSONApiHelpers.printStatistics();
+
     }
 
     private static void addAllAlternateFormsToInsertStatements(List<String> insertAlternateFormSQLStatements, PreparedStatement insertAlternateForm, Pokemon pokemon) throws SQLException {

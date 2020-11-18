@@ -19,9 +19,13 @@ import java.util.concurrent.Semaphore;
 
 public class JSONApiHelpers {
 
-    private static final Semaphore apiLimiter = new Semaphore(10);
+    private static final Semaphore apiLimiter = new Semaphore(300);
+
+    private static long totalApiCalls = 0;
+    private static long totalApiCallTime = 0;
 
     public static JSONObject fetchAPICall(String apiEndpoint) throws IOException, InterruptedException {
+        final long start = System.currentTimeMillis();
         apiLimiter.acquire();
         try {
             final HttpClient httpClient = HttpClients.createDefault();
@@ -39,6 +43,8 @@ public class JSONApiHelpers {
             return new JSONObject(responseBody);
         } finally {
             apiLimiter.release();
+            final long end = System.currentTimeMillis();
+            addApiCall(start, end);
         }
     }
 
@@ -46,6 +52,17 @@ public class JSONApiHelpers {
         final JSONArray allNames = json.getJSONArray("names");
         final List<JSONObject> englishNames = JSONEntity.filterJsonArray(allNames, jsonObject -> jsonObject.getJSONObject("language").getString("name").equals("en"));
         return englishNames.size() == 1 ? englishNames.get(0).getString("name") : "";
+    }
+
+    private static synchronized void addApiCall(long start, long end) {
+        totalApiCalls++;
+        final long duration = end - start;
+        totalApiCallTime += duration;
+    }
+
+    public static synchronized void printStatistics() {
+        final double averageApiCallTime = (double) totalApiCallTime / totalApiCalls;
+        System.out.printf("Made a total of %d api calls averaging %.2fms\n", totalApiCalls, averageApiCallTime);
     }
 
 }
