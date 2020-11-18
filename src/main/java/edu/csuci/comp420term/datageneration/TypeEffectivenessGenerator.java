@@ -10,7 +10,7 @@ import java.util.stream.Collectors;
 
 public class TypeEffectivenessGenerator {
 
-    public static void main(String[] args) throws IOException {
+    public static String generateTypeEffectivenessInsertSQL()throws IOException {
         final Map<String, Integer> typeNameToId = generateTypeMask();
         final String[] insertValues = typeNameToId.values()
                 .stream()
@@ -18,17 +18,8 @@ public class TypeEffectivenessGenerator {
                 .map(attackTypeId -> stringGenerateInsertStringForAttackType(typeNameToId, attackTypeId))
                 .flatMap(List::stream)
                 .toArray(String[]::new);
-        final String sqlString = "USE pokemondb;\r\n" +
-                "\r\n" +
-                "DELETE\r\n" +
-                "FROM TYPE_EFFECTIVENESS\r\n" +
-                "WHERE TRUE;\r\n" +
-                "\r\n" +
-                "INSERT INTO TYPE_EFFECTIVENESS(ATTACK_TYPE_ID, DEFEND_TYPE_ID, EFFECTIVENESS_MULTIPLIER)\r\n" +
+        return "INSERT INTO TYPE_EFFECTIVENESS(ATTACK_TYPE_ID, DEFEND_TYPE_ID, EFFECTIVENESS_MULTIPLIER)\r\n" +
                 "VALUES " + String.join(",\r\n       ", insertValues) + ";\r\n";
-        try (FileWriter fileWriter = new FileWriter("sql/type_effectivenesses.sql")){
-            fileWriter.write(sqlString);
-        }
     }
 
     private static List<String> stringGenerateInsertStringForAttackType(Map<String, Integer> typeNameToId, int attackTypeId) {
@@ -60,7 +51,7 @@ public class TypeEffectivenessGenerator {
         }
     }
 
-    public static Map<String, Integer> generateTypeMask() {
+    private static Map<String, Integer> generateTypeMask() {
         final Map<String, Integer> typeNameToId = new HashMap<>();
         typeNameToId.put("normal", 1);
         typeNameToId.put("fighting", 2);

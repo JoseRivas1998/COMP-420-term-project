@@ -5,6 +5,14 @@ FROM POKEMON
 WHERE TRUE;
 
 DELETE
+FROM TYPE_EFFECTIVENESS
+WHERE TRUE;
+
+DELETE
+FROM TYPE
+WHERE TRUE;
+
+DELETE
 FROM EGG_GROUP
 WHERE TRUE;
 
@@ -249,6 +257,147 @@ INSERT INTO ABILITY(ABILITY_ID, ABILITY_NAME, ABILITY_EFFECT) VALUES (229, 'Gras
 INSERT INTO ABILITY(ABILITY_ID, ABILITY_NAME, ABILITY_EFFECT) VALUES (230, 'Full-metal-body', 'This Pokémon\'s stats cannot be lowered by other Pokémon\'s moves or abilities.  This effect only applies to normal stat modifications and not more exotic effects such as topsy turvy or power swap.  This Ability is not bypassed by mold breaker, teravolt, or turboblaze.');
 INSERT INTO ABILITY(ABILITY_ID, ABILITY_NAME, ABILITY_EFFECT) VALUES (231, 'Shadow-shield', 'When this Pokémon has full HP, regular damage (not fixed damage!) from moves is halved.  This ability cannot be nullified.');
 INSERT INTO ABILITY(ABILITY_ID, ABILITY_NAME, ABILITY_EFFECT) VALUES (232, 'Prism-armor', 'Super-effective damage this Pokémon takes is reduced to 0.75×.  This Ability is not bypassed by mold breaker, teravolt, or turboblaze.');
+
+INSERT INTO TYPE(TYPE_ID, TYPE_NAME, TYPE_COLOR_HEX) VALUE (1, 'Normal', 'A8A878');
+INSERT INTO TYPE(TYPE_ID, TYPE_NAME, TYPE_COLOR_HEX) VALUE (2, 'Fighting', 'C03028');
+INSERT INTO TYPE(TYPE_ID, TYPE_NAME, TYPE_COLOR_HEX) VALUE (3, 'Flying', 'A890F0');
+INSERT INTO TYPE(TYPE_ID, TYPE_NAME, TYPE_COLOR_HEX) VALUE (4, 'Poison', 'A040A0');
+INSERT INTO TYPE(TYPE_ID, TYPE_NAME, TYPE_COLOR_HEX) VALUE (5, 'Ground', 'E0C068');
+INSERT INTO TYPE(TYPE_ID, TYPE_NAME, TYPE_COLOR_HEX) VALUE (6, 'Rock', 'B8A038');
+INSERT INTO TYPE(TYPE_ID, TYPE_NAME, TYPE_COLOR_HEX) VALUE (7, 'Bug', 'A8B820');
+INSERT INTO TYPE(TYPE_ID, TYPE_NAME, TYPE_COLOR_HEX) VALUE (8, 'Ghost', '705898');
+INSERT INTO TYPE(TYPE_ID, TYPE_NAME, TYPE_COLOR_HEX) VALUE (9, 'Steel', 'B8B8D0');
+INSERT INTO TYPE(TYPE_ID, TYPE_NAME, TYPE_COLOR_HEX) VALUE (10, 'Fire', 'F08030');
+INSERT INTO TYPE(TYPE_ID, TYPE_NAME, TYPE_COLOR_HEX) VALUE (11, 'Water', '6890F0');
+INSERT INTO TYPE(TYPE_ID, TYPE_NAME, TYPE_COLOR_HEX) VALUE (12, 'Grass', '78C850');
+INSERT INTO TYPE(TYPE_ID, TYPE_NAME, TYPE_COLOR_HEX) VALUE (13, 'Electric', 'F8D030');
+INSERT INTO TYPE(TYPE_ID, TYPE_NAME, TYPE_COLOR_HEX) VALUE (14, 'Psychic', 'F85888');
+INSERT INTO TYPE(TYPE_ID, TYPE_NAME, TYPE_COLOR_HEX) VALUE (15, 'Ice', '98D8D8');
+INSERT INTO TYPE(TYPE_ID, TYPE_NAME, TYPE_COLOR_HEX) VALUE (16, 'Dragon', '7038F8');
+INSERT INTO TYPE(TYPE_ID, TYPE_NAME, TYPE_COLOR_HEX) VALUE (17, 'Dark', '705848');
+INSERT INTO TYPE(TYPE_ID, TYPE_NAME, TYPE_COLOR_HEX) VALUE (18, 'Fairy', 'EE99AC');
+
+INSERT INTO TYPE_EFFECTIVENESS(ATTACK_TYPE_ID, DEFEND_TYPE_ID, EFFECTIVENESS_MULTIPLIER)
+VALUES (1, 6, 0.500000),
+       (1, 9, 0.500000),
+       (1, 8, 0.000000),
+       (2, 1, 2.000000),
+       (2, 6, 2.000000),
+       (2, 9, 2.000000),
+       (2, 15, 2.000000),
+       (2, 17, 2.000000),
+       (2, 3, 0.500000),
+       (2, 4, 0.500000),
+       (2, 7, 0.500000),
+       (2, 14, 0.500000),
+       (2, 18, 0.500000),
+       (2, 8, 0.000000),
+       (3, 2, 2.000000),
+       (3, 7, 2.000000),
+       (3, 12, 2.000000),
+       (3, 6, 0.500000),
+       (3, 9, 0.500000),
+       (3, 13, 0.500000),
+       (4, 12, 2.000000),
+       (4, 18, 2.000000),
+       (4, 4, 0.500000),
+       (4, 5, 0.500000),
+       (4, 6, 0.500000),
+       (4, 8, 0.500000),
+       (4, 9, 0.000000),
+       (5, 4, 2.000000),
+       (5, 6, 2.000000),
+       (5, 9, 2.000000),
+       (5, 10, 2.000000),
+       (5, 13, 2.000000),
+       (5, 7, 0.500000),
+       (5, 12, 0.500000),
+       (5, 3, 0.000000),
+       (6, 3, 2.000000),
+       (6, 7, 2.000000),
+       (6, 10, 2.000000),
+       (6, 15, 2.000000),
+       (6, 2, 0.500000),
+       (6, 5, 0.500000),
+       (6, 9, 0.500000),
+       (7, 12, 2.000000),
+       (7, 14, 2.000000),
+       (7, 17, 2.000000),
+       (7, 2, 0.500000),
+       (7, 3, 0.500000),
+       (7, 4, 0.500000),
+       (7, 8, 0.500000),
+       (7, 9, 0.500000),
+       (7, 10, 0.500000),
+       (7, 18, 0.500000),
+       (8, 8, 2.000000),
+       (8, 14, 2.000000),
+       (8, 17, 0.500000),
+       (8, 1, 0.000000),
+       (9, 6, 2.000000),
+       (9, 15, 2.000000),
+       (9, 18, 2.000000),
+       (9, 9, 0.500000),
+       (9, 10, 0.500000),
+       (9, 11, 0.500000),
+       (9, 13, 0.500000),
+       (10, 7, 2.000000),
+       (10, 9, 2.000000),
+       (10, 12, 2.000000),
+       (10, 15, 2.000000),
+       (10, 6, 0.500000),
+       (10, 10, 0.500000),
+       (10, 11, 0.500000),
+       (10, 16, 0.500000),
+       (11, 5, 2.000000),
+       (11, 6, 2.000000),
+       (11, 10, 2.000000),
+       (11, 11, 0.500000),
+       (11, 12, 0.500000),
+       (11, 16, 0.500000),
+       (12, 5, 2.000000),
+       (12, 6, 2.000000),
+       (12, 11, 2.000000),
+       (12, 3, 0.500000),
+       (12, 4, 0.500000),
+       (12, 7, 0.500000),
+       (12, 9, 0.500000),
+       (12, 10, 0.500000),
+       (12, 12, 0.500000),
+       (12, 16, 0.500000),
+       (13, 3, 2.000000),
+       (13, 11, 2.000000),
+       (13, 12, 0.500000),
+       (13, 13, 0.500000),
+       (13, 16, 0.500000),
+       (13, 5, 0.000000),
+       (14, 2, 2.000000),
+       (14, 4, 2.000000),
+       (14, 9, 0.500000),
+       (14, 14, 0.500000),
+       (14, 17, 0.000000),
+       (15, 3, 2.000000),
+       (15, 5, 2.000000),
+       (15, 12, 2.000000),
+       (15, 16, 2.000000),
+       (15, 9, 0.500000),
+       (15, 10, 0.500000),
+       (15, 11, 0.500000),
+       (15, 15, 0.500000),
+       (16, 16, 2.000000),
+       (16, 9, 0.500000),
+       (16, 18, 0.000000),
+       (17, 8, 2.000000),
+       (17, 14, 2.000000),
+       (17, 2, 0.500000),
+       (17, 17, 0.500000),
+       (17, 18, 0.500000),
+       (18, 2, 2.000000),
+       (18, 16, 2.000000),
+       (18, 17, 2.000000),
+       (18, 4, 0.500000),
+       (18, 9, 0.500000),
+       (18, 10, 0.500000);
 
 INSERT INTO POKEMON(POKEMON_ID, PRIMARY_TYPE, SECONDARY_TYPE, PRIMARY_EGG_GROUP, SECONDARY_EGG_GROUP, PRIMARY_ABILITY,
                     SECONDARY_ABILITY, HIDDEN_ABILITY, POKEMON_NAME, POKEMON_DESCRIPTION,

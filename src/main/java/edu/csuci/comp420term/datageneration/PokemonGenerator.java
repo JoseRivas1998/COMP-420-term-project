@@ -21,7 +21,7 @@ import static edu.csuci.comp420term.entities.JSONEntity.filterJsonArray;
 
 public class PokemonGenerator {
 
-    private static final Map<String, Type> TYPE_TABLE = PokemonGenerator.buildTypeTable();
+    public static final Map<String, Type> TYPE_TABLE = PokemonGenerator.buildTypeTable();
 
     private final int pokedexId;
     private final String mainApiEndpoint;

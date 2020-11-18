@@ -4,6 +4,7 @@ import edu.csuci.comp420term.data.ConnectionBuilder;
 import edu.csuci.comp420term.entities.Ability;
 import edu.csuci.comp420term.entities.EggGroup;
 import edu.csuci.comp420term.entities.Pokemon;
+import edu.csuci.comp420term.entities.Type;
 
 import java.io.FileWriter;
 import java.io.IOException;
@@ -12,16 +13,100 @@ import java.sql.*;
 import java.util.*;
 import java.util.function.Supplier;
 import java.util.function.ToIntFunction;
+import java.util.stream.Collectors;
 
 public class PokemonGeneratorClient {
 
-    public static final int NUM_POKEMON_TO_FETCH = 807;
+    public static final int START_POKEDEX_ENTRY = 1;
+    public static final int END_POKEDEX_ENTRY = 807;
     public static final String SQL_FILE_NAME = "sql/pokemon_data.sql";
 
     public static void main(String[] args) throws InterruptedException, SQLException, IOException {
+        final List<Pokemon> pokemons = getPokemons();
+
+        final Set<Ability> abilities = new TreeSet<>(Comparator.comparing(ability -> ability.id));
+        final Set<EggGroup> eggGroups = new TreeSet<>(Comparator.comparing(eggGroup -> eggGroup.id));
+        for (Pokemon pokemonObject : pokemons) {
+            abilities.add(pokemonObject.primaryAbility);
+            pokemonObject.getSecondaryAbility().ifPresent(abilities::add);
+            pokemonObject.getHiddenAbility().ifPresent(abilities::add);
+
+            eggGroups.add(pokemonObject.primaryEggGroup);
+            pokemonObject.getSecondaryEggGroup().ifPresent(eggGroups::add);
+        }
+
+        final Set<Type> types = new TreeSet<>(Comparator.comparing(type -> type.id));
+        types.addAll(PokemonGenerator.TYPE_TABLE.values());
+
+        final List<String> insertEggGroupSQLStatements = new ArrayList<>();
+        final List<String> insertAbilitySQLStatements = new ArrayList<>();
+        final List<String> insertTypeSqlStatements = new ArrayList<>();
+        final List<String> insertPokemonSQLStatements = new ArrayList<>();
+
+        try (Connection connection = ConnectionBuilder.buildConnection();
+             PreparedStatement insertEggGroup = connection.prepareStatement("INSERT INTO EGG_GROUP(EGG_GROUP_ID, EGG_GROUP_NAME) VALUE (?, ?);");
+             PreparedStatement insertAbility = connection.prepareStatement("INSERT INTO ABILITY(ABILITY_ID, ABILITY_NAME, ABILITY_EFFECT) VALUES (?, ?, ?);");
+             PreparedStatement insertType = connection.prepareStatement("INSERT INTO TYPE(TYPE_ID, TYPE_NAME, TYPE_COLOR_HEX) VALUE (?, ?, ?);");
+             PreparedStatement insertPokemon = connection.prepareStatement("INSERT INTO POKEMON(POKEMON_ID, PRIMARY_TYPE, SECONDARY_TYPE, PRIMARY_EGG_GROUP, SECONDARY_EGG_GROUP, PRIMARY_ABILITY,\r\n" +
+                     "                    SECONDARY_ABILITY, HIDDEN_ABILITY, POKEMON_NAME, POKEMON_DESCRIPTION,\r\n" +
+                     "                    POKEMON_IMAGE_URL) VALUE (?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?);")) {
+            addAllEggGroupInsertStatements(eggGroups, insertEggGroupSQLStatements, insertEggGroup);
+            addAllAbilityInsertStatements(abilities, insertAbilitySQLStatements, insertAbility);
+
+            for (Type type : types) {
+                insertType.setInt(1, type.id);
+                insertType.setString(2, type.name);
+                insertType.setString(3, type.colorHex);
+                insertTypeSqlStatements.add(getInsertSQL(insertType));
+            }
+
+            addAllPokemonInsertStatements(pokemons, insertPokemonSQLStatements, insertPokemon);
+
+        }
+
+        final String deleteStatements = "DELETE\r\n" +
+                "FROM POKEMON\r\n" +
+                "WHERE TRUE;\r\n" +
+                "\r\n" +
+                "DELETE\r\n" +
+                "FROM TYPE_EFFECTIVENESS\r\n" +
+                "WHERE TRUE;\r\n" +
+                "\r\n" +
+                "DELETE\r\n" +
+                "FROM TYPE\r\n" +
+                "WHERE TRUE;\r\n" +
+                "\r\n" +
+                "DELETE\r\n" +
+                "FROM EGG_GROUP\r\n" +
+                "WHERE TRUE;\r\n" +
+                "\r\n" +
+                "DELETE\r\n" +
+                "FROM ABILITY\r\n" +
+                "WHERE TRUE;\r\n";
+
+        String sqlFileContent = "USE pokemondb;\r\n" +
+                "\r\n" +
+                deleteStatements +
+                "\r\n" +
+                insertStatementListToSingleString(insertEggGroupSQLStatements) +
+                "\r\n" +
+                insertStatementListToSingleString(insertAbilitySQLStatements) +
+                "\r\n" +
+                insertStatementListToSingleString(insertTypeSqlStatements) +
+                "\r\n" +
+                TypeEffectivenessGenerator.generateTypeEffectivenessInsertSQL() +
+                "\r\n" +
+                insertStatementListToSingleString(insertPokemonSQLStatements);
+
+        try (FileWriter sqlFileWriter = new FileWriter(SQL_FILE_NAME, StandardCharsets.UTF_8)) {
+            sqlFileWriter.write(sqlFileContent);
+        }
+    }
+
+    private static List<Pokemon> getPokemons() throws InterruptedException {
         final List<Thread> threads = new ArrayList<>();
         final List<Pokemon> pokemons = new ArrayList<>();
-        for (int i = 1; i <= NUM_POKEMON_TO_FETCH; i++) {
+        for (int i = START_POKEDEX_ENTRY; i <= END_POKEDEX_ENTRY; i++) {
             final int pokedexNum = i;
             Thread t = new Thread(() -> {
                 try {
@@ -41,57 +126,7 @@ public class PokemonGeneratorClient {
             thread.join();
         }
         pokemons.sort(Pokemon::compareTo);
-        final Set<Ability> abilities = new TreeSet<>(Comparator.comparing(ability -> ability.id));
-        final Set<EggGroup> eggGroups = new TreeSet<>(Comparator.comparing(eggGroup -> eggGroup.id));
-        for (Pokemon pokemonObject : pokemons) {
-            abilities.add(pokemonObject.primaryAbility);
-            pokemonObject.getSecondaryAbility().ifPresent(abilities::add);
-            pokemonObject.getHiddenAbility().ifPresent(abilities::add);
-
-            eggGroups.add(pokemonObject.primaryEggGroup);
-            pokemonObject.getSecondaryEggGroup().ifPresent(eggGroups::add);
-        }
-
-        final List<String> insertEggGroupSQLStatements = new ArrayList<>();
-        final List<String> insertAbilitySQLStatements = new ArrayList<>();
-        final List<String> insertPokemonSQLStatements = new ArrayList<>();
-
-        try (Connection connection = ConnectionBuilder.buildConnection();
-             PreparedStatement insertEggGroup = connection.prepareStatement("INSERT INTO EGG_GROUP(EGG_GROUP_ID, EGG_GROUP_NAME) VALUE (?, ?);");
-             PreparedStatement insertAbility = connection.prepareStatement("INSERT INTO ABILITY(ABILITY_ID, ABILITY_NAME, ABILITY_EFFECT) VALUES (?, ?, ?);");
-             PreparedStatement insertPokemon = connection.prepareStatement("INSERT INTO POKEMON(POKEMON_ID, PRIMARY_TYPE, SECONDARY_TYPE, PRIMARY_EGG_GROUP, SECONDARY_EGG_GROUP, PRIMARY_ABILITY,\r\n" +
-                     "                    SECONDARY_ABILITY, HIDDEN_ABILITY, POKEMON_NAME, POKEMON_DESCRIPTION,\r\n" +
-                     "                    POKEMON_IMAGE_URL) VALUE (?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?);")) {
-            addAllEggGroupInsertStatements(eggGroups, insertEggGroupSQLStatements, insertEggGroup);
-            addAllAbilityInsertStatements(abilities, insertAbilitySQLStatements, insertAbility);
-            addAllPokemonInsertStatements(pokemons, insertPokemonSQLStatements, insertPokemon);
-
-        }
-
-        String sqlFileContent = "USE pokemondb;\r\n" +
-                "\r\n" +
-                "DELETE\r\n" +
-                "FROM POKEMON\r\n" +
-                "WHERE TRUE;\r\n" +
-                "\r\n" +
-                "DELETE\r\n" +
-                "FROM EGG_GROUP\r\n" +
-                "WHERE TRUE;\r\n" +
-                "\r\n" +
-                "DELETE\r\n" +
-                "FROM ABILITY\r\n" +
-                "WHERE TRUE;\r\n" +
-                "\r\n" +
-                insertStatementListToSingleString(insertEggGroupSQLStatements) +
-                "\r\n" +
-                insertStatementListToSingleString(insertAbilitySQLStatements)
-                +
-                "\r\n" +
-                insertStatementListToSingleString(insertPokemonSQLStatements);
-
-        try (FileWriter sqlFileWriter = new FileWriter(SQL_FILE_NAME, StandardCharsets.UTF_8)) {
-            sqlFileWriter.write(sqlFileContent);
-        }
+        return pokemons;
     }
 
     private static void addAllPokemonInsertStatements(List<Pokemon> pokemons, List<String> insertPokemonSQLStatements, PreparedStatement insertPokemon) throws SQLException {
