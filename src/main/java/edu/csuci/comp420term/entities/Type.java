@@ -2,25 +2,25 @@ package edu.csuci.comp420term.entities;
 
 import org.json.JSONObject;
 
-public class Ability extends JSONEntity {
+public class Type extends JSONEntity{
 
     public final int id;
     public final String name;
-    public final String effect;
+    public final String colorHex;
 
-    public Ability(int id, String name, String effect) {
+    public Type(int id, String name, String colorHex) {
         this.id = id;
         this.name = name;
-        this.effect = effect;
+        this.colorHex = colorHex;
     }
 
     @Override
     public JSONObject toJSON() {
-        JSONObject jsonObject = new JSONObject();
-        jsonObject.put("id", this.id);
-        jsonObject.put("name", this.name);
-        jsonObject.put("effect", this.effect);
-        return jsonObject;
+        JSONObject json = new JSONObject();
+        json.put("id", id);
+        json.put("name", name);
+        json.put("color_hex", colorHex);
+        return json;
     }
 
     @Override
@@ -30,7 +30,7 @@ public class Ability extends JSONEntity {
             if (obj == null || obj.getClass() != this.getClass()) {
                 result = false;
             } else {
-                Ability other = (Ability) obj;
+                Type other = (Type) obj;
                 result = this.id == other.id;
             }
         }

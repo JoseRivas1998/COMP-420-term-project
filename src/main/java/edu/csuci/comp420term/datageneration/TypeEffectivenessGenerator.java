@@ -60,7 +60,7 @@ public class TypeEffectivenessGenerator {
         }
     }
 
-    private static Map<String, Integer> generateTypeMask() {
+    public static Map<String, Integer> generateTypeMask() {
         final Map<String, Integer> typeNameToId = new HashMap<>();
         typeNameToId.put("normal", 1);
         typeNameToId.put("fighting", 2);

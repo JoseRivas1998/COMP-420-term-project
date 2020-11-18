@@ -1,12 +1,15 @@
 package edu.csuci.comp420term.datageneration;
 
 import edu.csuci.comp420term.entities.Ability;
+import edu.csuci.comp420term.entities.Type;
 import org.apache.commons.text.WordUtils;
 import org.json.JSONArray;
 import org.json.JSONObject;
 
 import java.io.IOException;
+import java.util.HashMap;
 import java.util.List;
+import java.util.Map;
 import java.util.Optional;
 import java.util.function.Predicate;
 
@@ -14,23 +17,25 @@ import static edu.csuci.comp420term.datageneration.JSONApiHelpers.fetchAPICall;
 import static edu.csuci.comp420term.entities.JSONEntity.filterJsonArray;
 
 
-public class PokemonScraper {
+public class PokemonGenerator {
+
+    private static final Map<String, Type> TYPE_TABLE = PokemonGenerator.buildTypeTable();
 
     private final int pokedexId;
     private final String mainApiEndpoint;
 
-    public PokemonScraper(int pokedexId) {
+    public PokemonGenerator(int pokedexId) {
         this.pokedexId = pokedexId;
         mainApiEndpoint = String.format("https://pokeapi.co/api/v2/pokemon/%d", pokedexId);
     }
 
-    public JSONObject scrape() throws Exception {
+    public JSONObject generate() throws Exception {
         final JSONObject pokemonJSON = fetchPokemonJSON();
         final String pokemonName = WordUtils.capitalize(pokemonJSON.getString("name"));
 
         final JSONArray types = pokemonJSON.getJSONArray("types");
-        final Optional<String> primaryType = optionalTypeName(types, 0);
-        final Optional<String> secondaryType = optionalTypeName(types, 1);
+        final Type primaryType = optionalTypeName(types, 0).orElseThrow();
+        final Optional<Type> secondaryType = optionalTypeName(types, 1);
 
         final JSONObject speciesJSON = fetchSpeciesJSON(pokemonJSON);
         final JSONArray eggGroups = speciesJSON.getJSONArray("egg_groups");
@@ -43,6 +48,7 @@ public class PokemonScraper {
         final Predicate<JSONObject> isAbilityHidden = ability -> ability.getBoolean("is_hidden");
         final List<JSONObject> nonHiddenAbilities = filterJsonArray(abilities, Predicate.not(isAbilityHidden));
         final List<JSONObject> hiddenAbilities = filterJsonArray(abilities, isAbilityHidden);
+
         final Ability primaryAbility = getAbilityFromIndex(nonHiddenAbilities, 0);
         final Optional<Ability> secondaryAbility = optionalAbilityAtIndex(nonHiddenAbilities, 1);
         final Optional<Ability> hiddenAbility = optionalAbilityAtIndex(hiddenAbilities, 0);
@@ -52,8 +58,8 @@ public class PokemonScraper {
         final JSONObject pokemonRowData = new JSONObject();
         pokemonRowData.put("id", this.pokedexId);
         pokemonRowData.put("name", pokemonName);
-        pokemonRowData.put("primary_type", primaryType.orElse(null));
-        pokemonRowData.put("secondary_type", secondaryType.orElse(null));
+        pokemonRowData.put("primary_type", primaryType.toJSON());
+        secondaryType.ifPresent(type -> pokemonRowData.put("secondary_type", type.toJSON()));
         pokemonRowData.put("primary_egg_group", primaryEggGroup.orElse(null));
         pokemonRowData.put("secondary_egg_group", secondaryEggGroup.orElse(null));
         pokemonRowData.put("image_file_path", imageUrl);
@@ -99,8 +105,9 @@ public class PokemonScraper {
         return eggGroup.getString("name");
     }
 
-    private Optional<String> optionalTypeName(JSONArray types, int typeSlotIndex) {
-        return types.length() > typeSlotIndex ? Optional.of(typeNameFromTypeSlot(types, typeSlotIndex)) : Optional.empty();
+    private Optional<Type> optionalTypeName(JSONArray types, int typeSlotIndex) {
+        final Optional<String> typeName = types.length() > typeSlotIndex ? Optional.of(typeNameFromTypeSlot(types, typeSlotIndex)) : Optional.empty();
+        return typeName.map(TYPE_TABLE::get);
     }
 
     private String typeNameFromTypeSlot(JSONArray types, int typeSlotIndex) {
@@ -117,6 +124,29 @@ public class PokemonScraper {
 
     private JSONObject fetchPokemonJSON() throws IOException {
         return fetchAPICall(this.mainApiEndpoint);
+    }
+
+    private static Map<String, Type> buildTypeTable() {
+        Map<String, Type> typeTable = new HashMap<>();
+        typeTable.put("Normal".toLowerCase(), new Type(1, "Normal", "A8A878"));
+        typeTable.put("Fighting".toLowerCase(), new Type(2, "Fighting", "C03028"));
+        typeTable.put("Flying".toLowerCase(), new Type(3, "Flying", "A890F0"));
+        typeTable.put("Poison".toLowerCase(), new Type(4, "Poison", "A040A0"));
+        typeTable.put("Ground".toLowerCase(), new Type(5, "Ground", "E0C068"));
+        typeTable.put("Rock".toLowerCase(), new Type(6, "Rock", "B8A038"));
+        typeTable.put("Bug".toLowerCase(), new Type(7, "Bug", "A8B820"));
+        typeTable.put("Ghost".toLowerCase(), new Type(8, "Ghost", "705898"));
+        typeTable.put("Steel".toLowerCase(), new Type(9, "Steel", "B8B8D0"));
+        typeTable.put("Fire".toLowerCase(), new Type(0, "Fire", "F08030"));
+        typeTable.put("Water".toLowerCase(), new Type(1, "Water", "6890F0"));
+        typeTable.put("Grass".toLowerCase(), new Type(2, "Grass", "78C850"));
+        typeTable.put("Electric".toLowerCase(), new Type(3, "Electric", "F8D030"));
+        typeTable.put("Psychic".toLowerCase(), new Type(4, "Psychic", "F85888"));
+        typeTable.put("Ice".toLowerCase(), new Type(5, "Ice", "98D8D8"));
+        typeTable.put("Dragon".toLowerCase(), new Type(6, "Dragon", "7038F8"));
+        typeTable.put("Dark".toLowerCase(), new Type(7, "Dark", "705848"));
+        typeTable.put("Fairy".toLowerCase(), new Type(8, "Fairy", "EE99AC"));
+        return typeTable;
     }
 
 

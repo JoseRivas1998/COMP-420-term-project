@@ -3,9 +3,6 @@ package edu.csuci.comp420term.datageneration;
 import org.json.JSONArray;
 import org.json.JSONObject;
 
-import java.io.FileWriter;
-import java.io.IOException;
-import java.nio.charset.StandardCharsets;
 import java.util.ArrayList;
 import java.util.Comparator;
 import java.util.List;
@@ -21,8 +18,8 @@ public class PokemonScraperClient {
             final int pokedexNum = i;
             Thread t = new Thread(() -> {
                 try {
-                    final PokemonScraper pokemonScraper = new PokemonScraper(pokedexNum);
-                    final JSONObject pokemon = pokemonScraper.scrape();
+                    final PokemonGenerator pokemonGenerator = new PokemonGenerator(pokedexNum);
+                    final JSONObject pokemon = pokemonGenerator.generate();
                     synchronized (PokemonScraperClient.class) {
                         pokemonObjects.add(pokemon);
                     }
