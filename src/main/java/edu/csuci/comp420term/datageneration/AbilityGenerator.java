@@ -39,7 +39,7 @@ public class AbilityGenerator {
             final List<JSONObject> englishEffectEntries = JSONEntity.filterJsonArray(effectEntries, jsonObjectPredicate);
             final String effect = englishEffectEntries.size() == 1 ? englishEffectEntries.get(0).getString("effect") : "";
 
-            ability = new Ability(abilityId, name, effect);
+            ability = new Ability(abilityId, name, effect.replace('\n', ' ').replaceAll("\f", " "));
         } catch (Exception exception) {
             ability = getMissingAbility();
         }

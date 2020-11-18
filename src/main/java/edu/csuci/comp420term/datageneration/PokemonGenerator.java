@@ -152,15 +152,15 @@ public class PokemonGenerator {
         typeTable.put("Bug".toLowerCase(), new Type(7, "Bug", "A8B820"));
         typeTable.put("Ghost".toLowerCase(), new Type(8, "Ghost", "705898"));
         typeTable.put("Steel".toLowerCase(), new Type(9, "Steel", "B8B8D0"));
-        typeTable.put("Fire".toLowerCase(), new Type(0, "Fire", "F08030"));
-        typeTable.put("Water".toLowerCase(), new Type(1, "Water", "6890F0"));
-        typeTable.put("Grass".toLowerCase(), new Type(2, "Grass", "78C850"));
-        typeTable.put("Electric".toLowerCase(), new Type(3, "Electric", "F8D030"));
-        typeTable.put("Psychic".toLowerCase(), new Type(4, "Psychic", "F85888"));
-        typeTable.put("Ice".toLowerCase(), new Type(5, "Ice", "98D8D8"));
-        typeTable.put("Dragon".toLowerCase(), new Type(6, "Dragon", "7038F8"));
-        typeTable.put("Dark".toLowerCase(), new Type(7, "Dark", "705848"));
-        typeTable.put("Fairy".toLowerCase(), new Type(8, "Fairy", "EE99AC"));
+        typeTable.put("Fire".toLowerCase(), new Type(10, "Fire", "F08030"));
+        typeTable.put("Water".toLowerCase(), new Type(11, "Water", "6890F0"));
+        typeTable.put("Grass".toLowerCase(), new Type(12, "Grass", "78C850"));
+        typeTable.put("Electric".toLowerCase(), new Type(13, "Electric", "F8D030"));
+        typeTable.put("Psychic".toLowerCase(), new Type(14, "Psychic", "F85888"));
+        typeTable.put("Ice".toLowerCase(), new Type(15, "Ice", "98D8D8"));
+        typeTable.put("Dragon".toLowerCase(), new Type(16, "Dragon", "7038F8"));
+        typeTable.put("Dark".toLowerCase(), new Type(17, "Dark", "705848"));
+        typeTable.put("Fairy".toLowerCase(), new Type(18, "Fairy", "EE99AC"));
         return typeTable;
     }
 
