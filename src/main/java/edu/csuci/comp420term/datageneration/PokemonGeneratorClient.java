@@ -54,6 +54,7 @@ public class PokemonGeneratorClient {
         final List<String> insertStatSQLStatements = new ArrayList<>();
         final List<String> insertNatureStatSqlStatements = new ArrayList<>();
         final List<String> insertBaseStatSQLStatements = new ArrayList<>();
+        final List<String> insertAlternateFormSQLStatements = new ArrayList<>();
 
         try (Connection connection = ConnectionBuilder.buildConnection();
              PreparedStatement insertEggGroup = connection.prepareStatement("INSERT INTO EGG_GROUP(EGG_GROUP_ID, EGG_GROUP_NAME) VALUE (?, ?);");
@@ -65,7 +66,9 @@ public class PokemonGeneratorClient {
              PreparedStatement insertPokemon = connection.prepareStatement("INSERT INTO POKEMON(POKEMON_ID, PRIMARY_TYPE, SECONDARY_TYPE, PRIMARY_EGG_GROUP, SECONDARY_EGG_GROUP, PRIMARY_ABILITY,\r\n" +
                      "                    SECONDARY_ABILITY, HIDDEN_ABILITY, POKEMON_NAME, POKEMON_DESCRIPTION,\r\n" +
                      "                    POKEMON_IMAGE_URL) VALUE (?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?);");
-             PreparedStatement insertBaseStat = connection.prepareStatement("INSERT INTO BASE_STAT(STAT_ID, POKEMON_ID, STAT_VALUE) VALUE (?, ?, ?);")) {
+             PreparedStatement insertBaseStat = connection.prepareStatement("INSERT INTO BASE_STAT(STAT_ID, POKEMON_ID, STAT_VALUE) VALUE (?, ?, ?);");
+             PreparedStatement insertAlternateForm = connection.prepareStatement("INSERT INTO ALTERNATE_FORM(ALTERNATE_FORM_ID, POKEMON_ID, ALTERNATE_FORM_NAME,\r\n" +
+                     "                           ALTERNATE_FORM_IMAGE_URL) VALUE (?, ?, ?, ?);")) {
             addAllEggGroupInsertStatements(eggGroups, insertEggGroupSQLStatements, insertEggGroup);
             addAllAbilityInsertStatements(abilities, insertAbilitySQLStatements, insertAbility);
             addAllTypeInsertStatements(types, insertTypeSqlStatements, insertType);
@@ -86,6 +89,7 @@ public class PokemonGeneratorClient {
                 insertPokemon.setString(11, pokemon.imageFilePath);
                 insertPokemonSQLStatements.add(getInsertSQL(insertPokemon));
                 addAllBaseStatsToInsertStatements(insertBaseStatSQLStatements, insertBaseStat, pokemon);
+                addAllAlternateFormsToInsertStatements(insertAlternateFormSQLStatements, insertAlternateForm, pokemon);
             }
 
         }
@@ -94,6 +98,10 @@ public class PokemonGeneratorClient {
                 "FROM BASE_STAT\r\n" +
                 "WHERE TRUE;\r\n" +
                 "\r\n" +
+                "DELETE\r\n" +
+                "FROM ALTERNATE_FORM\r\n" +
+                "WHERE TRUE;\r\n" +
+                "\r\n"+
                 "DELETE\r\n" +
                 "FROM POKEMON\r\n" +
                 "WHERE TRUE;\r\n" +
@@ -146,11 +154,27 @@ public class PokemonGeneratorClient {
                 "\r\n" +
                 insertStatementListToSingleString(insertPokemonSQLStatements) +
                 "\r\n" +
-                insertStatementListToSingleString(insertBaseStatSQLStatements);
+                insertStatementListToSingleString(insertBaseStatSQLStatements) +
+                "\r\n" +
+                insertStatementListToSingleString(insertAlternateFormSQLStatements);
 
         try (FileWriter sqlFileWriter = new FileWriter(SQL_FILE_NAME, StandardCharsets.UTF_8)) {
             sqlFileWriter.write(sqlFileContent);
         }
+    }
+
+    private static void addAllAlternateFormsToInsertStatements(List<String> insertAlternateFormSQLStatements, PreparedStatement insertAlternateForm, Pokemon pokemon) throws SQLException {
+        for (AlternateForm alternateForm : pokemon.alternateForms) {
+            addAlternateFormToInsertStatements(insertAlternateFormSQLStatements, insertAlternateForm, alternateForm);
+        }
+    }
+
+    private static void addAlternateFormToInsertStatements(List<String> insertAlternateFormSQLStatements, PreparedStatement insertAlternateForm, AlternateForm alternateForm) throws SQLException {
+        insertAlternateForm.setInt(1, alternateForm.id);
+        insertAlternateForm.setInt(2, alternateForm.pokemonId);
+        insertAlternateForm.setString(3, alternateForm.name);
+        insertAlternateForm.setString(4, alternateForm.imageUrl);
+        insertAlternateFormSQLStatements.add(getInsertSQL(insertAlternateForm));
     }
 
     private static void addAllBaseStatsToInsertStatements(List<String> insertBaseStatSQLStatements, PreparedStatement insertBaseStat, Pokemon pokemon) throws SQLException {

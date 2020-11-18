@@ -5,6 +5,10 @@ FROM BASE_STAT
 WHERE TRUE;
 
 DELETE
+FROM ALTERNATE_FORM
+WHERE TRUE;
+
+DELETE
 FROM POKEMON
 WHERE TRUE;
 
@@ -7748,3 +7752,276 @@ INSERT INTO BASE_STAT(STAT_ID, POKEMON_ID, STAT_VALUE) VALUE (3, 807, 75);
 INSERT INTO BASE_STAT(STAT_ID, POKEMON_ID, STAT_VALUE) VALUE (4, 807, 102);
 INSERT INTO BASE_STAT(STAT_ID, POKEMON_ID, STAT_VALUE) VALUE (5, 807, 80);
 INSERT INTO BASE_STAT(STAT_ID, POKEMON_ID, STAT_VALUE) VALUE (6, 807, 143);
+
+INSERT INTO ALTERNATE_FORM(ALTERNATE_FORM_ID, POKEMON_ID, ALTERNATE_FORM_NAME,
+                           ALTERNATE_FORM_IMAGE_URL) VALUE (1, 201, 'Unown A', 'https://raw.githubusercontent.com/PokeAPI/sprites/master/sprites/pokemon/201-a.png');
+INSERT INTO ALTERNATE_FORM(ALTERNATE_FORM_ID, POKEMON_ID, ALTERNATE_FORM_NAME,
+                           ALTERNATE_FORM_IMAGE_URL) VALUE (2, 201, 'Unown B', 'https://raw.githubusercontent.com/PokeAPI/sprites/master/sprites/pokemon/201-b.png');
+INSERT INTO ALTERNATE_FORM(ALTERNATE_FORM_ID, POKEMON_ID, ALTERNATE_FORM_NAME,
+                           ALTERNATE_FORM_IMAGE_URL) VALUE (3, 201, 'Unown C', 'https://raw.githubusercontent.com/PokeAPI/sprites/master/sprites/pokemon/201-c.png');
+INSERT INTO ALTERNATE_FORM(ALTERNATE_FORM_ID, POKEMON_ID, ALTERNATE_FORM_NAME,
+                           ALTERNATE_FORM_IMAGE_URL) VALUE (4, 201, 'Unown D', 'https://raw.githubusercontent.com/PokeAPI/sprites/master/sprites/pokemon/201-d.png');
+INSERT INTO ALTERNATE_FORM(ALTERNATE_FORM_ID, POKEMON_ID, ALTERNATE_FORM_NAME,
+                           ALTERNATE_FORM_IMAGE_URL) VALUE (5, 201, 'Unown E', 'https://raw.githubusercontent.com/PokeAPI/sprites/master/sprites/pokemon/201-e.png');
+INSERT INTO ALTERNATE_FORM(ALTERNATE_FORM_ID, POKEMON_ID, ALTERNATE_FORM_NAME,
+                           ALTERNATE_FORM_IMAGE_URL) VALUE (6, 201, 'Unown F', 'https://raw.githubusercontent.com/PokeAPI/sprites/master/sprites/pokemon/201-f.png');
+INSERT INTO ALTERNATE_FORM(ALTERNATE_FORM_ID, POKEMON_ID, ALTERNATE_FORM_NAME,
+                           ALTERNATE_FORM_IMAGE_URL) VALUE (7, 201, 'Unown G', 'https://raw.githubusercontent.com/PokeAPI/sprites/master/sprites/pokemon/201-g.png');
+INSERT INTO ALTERNATE_FORM(ALTERNATE_FORM_ID, POKEMON_ID, ALTERNATE_FORM_NAME,
+                           ALTERNATE_FORM_IMAGE_URL) VALUE (8, 201, 'Unown H', 'https://raw.githubusercontent.com/PokeAPI/sprites/master/sprites/pokemon/201-h.png');
+INSERT INTO ALTERNATE_FORM(ALTERNATE_FORM_ID, POKEMON_ID, ALTERNATE_FORM_NAME,
+                           ALTERNATE_FORM_IMAGE_URL) VALUE (9, 201, 'Unown I', 'https://raw.githubusercontent.com/PokeAPI/sprites/master/sprites/pokemon/201-i.png');
+INSERT INTO ALTERNATE_FORM(ALTERNATE_FORM_ID, POKEMON_ID, ALTERNATE_FORM_NAME,
+                           ALTERNATE_FORM_IMAGE_URL) VALUE (10, 201, 'Unown J', 'https://raw.githubusercontent.com/PokeAPI/sprites/master/sprites/pokemon/201-j.png');
+INSERT INTO ALTERNATE_FORM(ALTERNATE_FORM_ID, POKEMON_ID, ALTERNATE_FORM_NAME,
+                           ALTERNATE_FORM_IMAGE_URL) VALUE (11, 201, 'Unown K', 'https://raw.githubusercontent.com/PokeAPI/sprites/master/sprites/pokemon/201-k.png');
+INSERT INTO ALTERNATE_FORM(ALTERNATE_FORM_ID, POKEMON_ID, ALTERNATE_FORM_NAME,
+                           ALTERNATE_FORM_IMAGE_URL) VALUE (12, 201, 'Unown L', 'https://raw.githubusercontent.com/PokeAPI/sprites/master/sprites/pokemon/201-l.png');
+INSERT INTO ALTERNATE_FORM(ALTERNATE_FORM_ID, POKEMON_ID, ALTERNATE_FORM_NAME,
+                           ALTERNATE_FORM_IMAGE_URL) VALUE (13, 201, 'Unown M', 'https://raw.githubusercontent.com/PokeAPI/sprites/master/sprites/pokemon/201-m.png');
+INSERT INTO ALTERNATE_FORM(ALTERNATE_FORM_ID, POKEMON_ID, ALTERNATE_FORM_NAME,
+                           ALTERNATE_FORM_IMAGE_URL) VALUE (14, 201, 'Unown N', 'https://raw.githubusercontent.com/PokeAPI/sprites/master/sprites/pokemon/201-n.png');
+INSERT INTO ALTERNATE_FORM(ALTERNATE_FORM_ID, POKEMON_ID, ALTERNATE_FORM_NAME,
+                           ALTERNATE_FORM_IMAGE_URL) VALUE (15, 201, 'Unown O', 'https://raw.githubusercontent.com/PokeAPI/sprites/master/sprites/pokemon/201-o.png');
+INSERT INTO ALTERNATE_FORM(ALTERNATE_FORM_ID, POKEMON_ID, ALTERNATE_FORM_NAME,
+                           ALTERNATE_FORM_IMAGE_URL) VALUE (16, 201, 'Unown P', 'https://raw.githubusercontent.com/PokeAPI/sprites/master/sprites/pokemon/201-p.png');
+INSERT INTO ALTERNATE_FORM(ALTERNATE_FORM_ID, POKEMON_ID, ALTERNATE_FORM_NAME,
+                           ALTERNATE_FORM_IMAGE_URL) VALUE (17, 201, 'Unown Q', 'https://raw.githubusercontent.com/PokeAPI/sprites/master/sprites/pokemon/201-q.png');
+INSERT INTO ALTERNATE_FORM(ALTERNATE_FORM_ID, POKEMON_ID, ALTERNATE_FORM_NAME,
+                           ALTERNATE_FORM_IMAGE_URL) VALUE (18, 201, 'Unown R', 'https://raw.githubusercontent.com/PokeAPI/sprites/master/sprites/pokemon/201-r.png');
+INSERT INTO ALTERNATE_FORM(ALTERNATE_FORM_ID, POKEMON_ID, ALTERNATE_FORM_NAME,
+                           ALTERNATE_FORM_IMAGE_URL) VALUE (19, 201, 'Unown S', 'https://raw.githubusercontent.com/PokeAPI/sprites/master/sprites/pokemon/201-s.png');
+INSERT INTO ALTERNATE_FORM(ALTERNATE_FORM_ID, POKEMON_ID, ALTERNATE_FORM_NAME,
+                           ALTERNATE_FORM_IMAGE_URL) VALUE (20, 201, 'Unown T', 'https://raw.githubusercontent.com/PokeAPI/sprites/master/sprites/pokemon/201-t.png');
+INSERT INTO ALTERNATE_FORM(ALTERNATE_FORM_ID, POKEMON_ID, ALTERNATE_FORM_NAME,
+                           ALTERNATE_FORM_IMAGE_URL) VALUE (21, 201, 'Unown U', 'https://raw.githubusercontent.com/PokeAPI/sprites/master/sprites/pokemon/201-u.png');
+INSERT INTO ALTERNATE_FORM(ALTERNATE_FORM_ID, POKEMON_ID, ALTERNATE_FORM_NAME,
+                           ALTERNATE_FORM_IMAGE_URL) VALUE (22, 201, 'Unown V', 'https://raw.githubusercontent.com/PokeAPI/sprites/master/sprites/pokemon/201-v.png');
+INSERT INTO ALTERNATE_FORM(ALTERNATE_FORM_ID, POKEMON_ID, ALTERNATE_FORM_NAME,
+                           ALTERNATE_FORM_IMAGE_URL) VALUE (23, 201, 'Unown W', 'https://raw.githubusercontent.com/PokeAPI/sprites/master/sprites/pokemon/201-w.png');
+INSERT INTO ALTERNATE_FORM(ALTERNATE_FORM_ID, POKEMON_ID, ALTERNATE_FORM_NAME,
+                           ALTERNATE_FORM_IMAGE_URL) VALUE (24, 201, 'Unown X', 'https://raw.githubusercontent.com/PokeAPI/sprites/master/sprites/pokemon/201-x.png');
+INSERT INTO ALTERNATE_FORM(ALTERNATE_FORM_ID, POKEMON_ID, ALTERNATE_FORM_NAME,
+                           ALTERNATE_FORM_IMAGE_URL) VALUE (25, 201, 'Unown Y', 'https://raw.githubusercontent.com/PokeAPI/sprites/master/sprites/pokemon/201-y.png');
+INSERT INTO ALTERNATE_FORM(ALTERNATE_FORM_ID, POKEMON_ID, ALTERNATE_FORM_NAME,
+                           ALTERNATE_FORM_IMAGE_URL) VALUE (26, 201, 'Unown Z', 'https://raw.githubusercontent.com/PokeAPI/sprites/master/sprites/pokemon/201-z.png');
+INSERT INTO ALTERNATE_FORM(ALTERNATE_FORM_ID, POKEMON_ID, ALTERNATE_FORM_NAME,
+                           ALTERNATE_FORM_IMAGE_URL) VALUE (27, 201, 'Unown !', 'https://raw.githubusercontent.com/PokeAPI/sprites/master/sprites/pokemon/201-exclamation.png');
+INSERT INTO ALTERNATE_FORM(ALTERNATE_FORM_ID, POKEMON_ID, ALTERNATE_FORM_NAME,
+                           ALTERNATE_FORM_IMAGE_URL) VALUE (28, 201, 'Unown ?', 'https://raw.githubusercontent.com/PokeAPI/sprites/master/sprites/pokemon/201-question.png');
+INSERT INTO ALTERNATE_FORM(ALTERNATE_FORM_ID, POKEMON_ID, ALTERNATE_FORM_NAME,
+                           ALTERNATE_FORM_IMAGE_URL) VALUE (1, 412, 'Plant Burmy', 'https://raw.githubusercontent.com/PokeAPI/sprites/master/sprites/pokemon/412-plant.png');
+INSERT INTO ALTERNATE_FORM(ALTERNATE_FORM_ID, POKEMON_ID, ALTERNATE_FORM_NAME,
+                           ALTERNATE_FORM_IMAGE_URL) VALUE (2, 412, 'Sandy Burmy', 'https://raw.githubusercontent.com/PokeAPI/sprites/master/sprites/pokemon/412-sandy.png');
+INSERT INTO ALTERNATE_FORM(ALTERNATE_FORM_ID, POKEMON_ID, ALTERNATE_FORM_NAME,
+                           ALTERNATE_FORM_IMAGE_URL) VALUE (3, 412, 'Trash Burmy', 'https://raw.githubusercontent.com/PokeAPI/sprites/master/sprites/pokemon/412-trash.png');
+INSERT INTO ALTERNATE_FORM(ALTERNATE_FORM_ID, POKEMON_ID, ALTERNATE_FORM_NAME,
+                           ALTERNATE_FORM_IMAGE_URL) VALUE (1, 414, '', 'https://raw.githubusercontent.com/PokeAPI/sprites/master/sprites/pokemon/414-plant.png');
+INSERT INTO ALTERNATE_FORM(ALTERNATE_FORM_ID, POKEMON_ID, ALTERNATE_FORM_NAME,
+                           ALTERNATE_FORM_IMAGE_URL) VALUE (1, 421, 'Overcast Cherrim', 'https://raw.githubusercontent.com/PokeAPI/sprites/master/sprites/pokemon/421-overcast.png');
+INSERT INTO ALTERNATE_FORM(ALTERNATE_FORM_ID, POKEMON_ID, ALTERNATE_FORM_NAME,
+                           ALTERNATE_FORM_IMAGE_URL) VALUE (2, 421, 'Sunshine Cherrim', 'https://raw.githubusercontent.com/PokeAPI/sprites/master/sprites/pokemon/421-sunshine.png');
+INSERT INTO ALTERNATE_FORM(ALTERNATE_FORM_ID, POKEMON_ID, ALTERNATE_FORM_NAME,
+                           ALTERNATE_FORM_IMAGE_URL) VALUE (1, 422, 'West Shellos', 'https://raw.githubusercontent.com/PokeAPI/sprites/master/sprites/pokemon/422-west.png');
+INSERT INTO ALTERNATE_FORM(ALTERNATE_FORM_ID, POKEMON_ID, ALTERNATE_FORM_NAME,
+                           ALTERNATE_FORM_IMAGE_URL) VALUE (2, 422, 'East Shellos', 'https://raw.githubusercontent.com/PokeAPI/sprites/master/sprites/pokemon/422-east.png');
+INSERT INTO ALTERNATE_FORM(ALTERNATE_FORM_ID, POKEMON_ID, ALTERNATE_FORM_NAME,
+                           ALTERNATE_FORM_IMAGE_URL) VALUE (1, 423, 'West Gastrodon', 'https://raw.githubusercontent.com/PokeAPI/sprites/master/sprites/pokemon/423-west.png');
+INSERT INTO ALTERNATE_FORM(ALTERNATE_FORM_ID, POKEMON_ID, ALTERNATE_FORM_NAME,
+                           ALTERNATE_FORM_IMAGE_URL) VALUE (2, 423, 'East Gastrodon', 'https://raw.githubusercontent.com/PokeAPI/sprites/master/sprites/pokemon/423-east.png');
+INSERT INTO ALTERNATE_FORM(ALTERNATE_FORM_ID, POKEMON_ID, ALTERNATE_FORM_NAME,
+                           ALTERNATE_FORM_IMAGE_URL) VALUE (1, 493, 'Normal Arceus', 'https://raw.githubusercontent.com/PokeAPI/sprites/master/sprites/pokemon/493-normal.png');
+INSERT INTO ALTERNATE_FORM(ALTERNATE_FORM_ID, POKEMON_ID, ALTERNATE_FORM_NAME,
+                           ALTERNATE_FORM_IMAGE_URL) VALUE (2, 493, 'Bug Arceus', 'https://raw.githubusercontent.com/PokeAPI/sprites/master/sprites/pokemon/493-bug.png');
+INSERT INTO ALTERNATE_FORM(ALTERNATE_FORM_ID, POKEMON_ID, ALTERNATE_FORM_NAME,
+                           ALTERNATE_FORM_IMAGE_URL) VALUE (3, 493, 'Dark Arceus', 'https://raw.githubusercontent.com/PokeAPI/sprites/master/sprites/pokemon/493-dark.png');
+INSERT INTO ALTERNATE_FORM(ALTERNATE_FORM_ID, POKEMON_ID, ALTERNATE_FORM_NAME,
+                           ALTERNATE_FORM_IMAGE_URL) VALUE (4, 493, 'Dragon Arceus', 'https://raw.githubusercontent.com/PokeAPI/sprites/master/sprites/pokemon/493-dragon.png');
+INSERT INTO ALTERNATE_FORM(ALTERNATE_FORM_ID, POKEMON_ID, ALTERNATE_FORM_NAME,
+                           ALTERNATE_FORM_IMAGE_URL) VALUE (5, 493, 'Electric Arceus', 'https://raw.githubusercontent.com/PokeAPI/sprites/master/sprites/pokemon/493-electric.png');
+INSERT INTO ALTERNATE_FORM(ALTERNATE_FORM_ID, POKEMON_ID, ALTERNATE_FORM_NAME,
+                           ALTERNATE_FORM_IMAGE_URL) VALUE (6, 493, 'Fighting Arceus', 'https://raw.githubusercontent.com/PokeAPI/sprites/master/sprites/pokemon/493-fighting.png');
+INSERT INTO ALTERNATE_FORM(ALTERNATE_FORM_ID, POKEMON_ID, ALTERNATE_FORM_NAME,
+                           ALTERNATE_FORM_IMAGE_URL) VALUE (7, 493, 'Fire Arceus', 'https://raw.githubusercontent.com/PokeAPI/sprites/master/sprites/pokemon/493-fire.png');
+INSERT INTO ALTERNATE_FORM(ALTERNATE_FORM_ID, POKEMON_ID, ALTERNATE_FORM_NAME,
+                           ALTERNATE_FORM_IMAGE_URL) VALUE (8, 493, 'Flying Arceus', 'https://raw.githubusercontent.com/PokeAPI/sprites/master/sprites/pokemon/493-flying.png');
+INSERT INTO ALTERNATE_FORM(ALTERNATE_FORM_ID, POKEMON_ID, ALTERNATE_FORM_NAME,
+                           ALTERNATE_FORM_IMAGE_URL) VALUE (9, 493, 'Ghost Arceus', 'https://raw.githubusercontent.com/PokeAPI/sprites/master/sprites/pokemon/493-ghost.png');
+INSERT INTO ALTERNATE_FORM(ALTERNATE_FORM_ID, POKEMON_ID, ALTERNATE_FORM_NAME,
+                           ALTERNATE_FORM_IMAGE_URL) VALUE (10, 493, 'Grass Arceus', 'https://raw.githubusercontent.com/PokeAPI/sprites/master/sprites/pokemon/493-grass.png');
+INSERT INTO ALTERNATE_FORM(ALTERNATE_FORM_ID, POKEMON_ID, ALTERNATE_FORM_NAME,
+                           ALTERNATE_FORM_IMAGE_URL) VALUE (11, 493, 'Ground Arceus', 'https://raw.githubusercontent.com/PokeAPI/sprites/master/sprites/pokemon/493-ground.png');
+INSERT INTO ALTERNATE_FORM(ALTERNATE_FORM_ID, POKEMON_ID, ALTERNATE_FORM_NAME,
+                           ALTERNATE_FORM_IMAGE_URL) VALUE (12, 493, 'Ice Arceus', 'https://raw.githubusercontent.com/PokeAPI/sprites/master/sprites/pokemon/493-ice.png');
+INSERT INTO ALTERNATE_FORM(ALTERNATE_FORM_ID, POKEMON_ID, ALTERNATE_FORM_NAME,
+                           ALTERNATE_FORM_IMAGE_URL) VALUE (13, 493, 'Poison Arceus', 'https://raw.githubusercontent.com/PokeAPI/sprites/master/sprites/pokemon/493-poison.png');
+INSERT INTO ALTERNATE_FORM(ALTERNATE_FORM_ID, POKEMON_ID, ALTERNATE_FORM_NAME,
+                           ALTERNATE_FORM_IMAGE_URL) VALUE (14, 493, 'Psychic Arceus', 'https://raw.githubusercontent.com/PokeAPI/sprites/master/sprites/pokemon/493-psychic.png');
+INSERT INTO ALTERNATE_FORM(ALTERNATE_FORM_ID, POKEMON_ID, ALTERNATE_FORM_NAME,
+                           ALTERNATE_FORM_IMAGE_URL) VALUE (15, 493, 'Rock Arceus', 'https://raw.githubusercontent.com/PokeAPI/sprites/master/sprites/pokemon/493-rock.png');
+INSERT INTO ALTERNATE_FORM(ALTERNATE_FORM_ID, POKEMON_ID, ALTERNATE_FORM_NAME,
+                           ALTERNATE_FORM_IMAGE_URL) VALUE (16, 493, 'Steel Arceus', 'https://raw.githubusercontent.com/PokeAPI/sprites/master/sprites/pokemon/493-steel.png');
+INSERT INTO ALTERNATE_FORM(ALTERNATE_FORM_ID, POKEMON_ID, ALTERNATE_FORM_NAME,
+                           ALTERNATE_FORM_IMAGE_URL) VALUE (17, 493, 'Water Arceus', 'https://raw.githubusercontent.com/PokeAPI/sprites/master/sprites/pokemon/493-water.png');
+INSERT INTO ALTERNATE_FORM(ALTERNATE_FORM_ID, POKEMON_ID, ALTERNATE_FORM_NAME,
+                           ALTERNATE_FORM_IMAGE_URL) VALUE (18, 493, '??? Arceus', 'https://raw.githubusercontent.com/PokeAPI/sprites/master/sprites/pokemon/493-unknown.png');
+INSERT INTO ALTERNATE_FORM(ALTERNATE_FORM_ID, POKEMON_ID, ALTERNATE_FORM_NAME,
+                           ALTERNATE_FORM_IMAGE_URL) VALUE (19, 493, 'Fairy Arceus', 'https://raw.githubusercontent.com/PokeAPI/sprites/master/sprites/pokemon/493-fairy.png');
+INSERT INTO ALTERNATE_FORM(ALTERNATE_FORM_ID, POKEMON_ID, ALTERNATE_FORM_NAME,
+                           ALTERNATE_FORM_IMAGE_URL) VALUE (1, 585, 'Spring Deerling', 'https://raw.githubusercontent.com/PokeAPI/sprites/master/sprites/pokemon/585-spring.png');
+INSERT INTO ALTERNATE_FORM(ALTERNATE_FORM_ID, POKEMON_ID, ALTERNATE_FORM_NAME,
+                           ALTERNATE_FORM_IMAGE_URL) VALUE (2, 585, 'Summer Deerling', 'https://raw.githubusercontent.com/PokeAPI/sprites/master/sprites/pokemon/585-summer.png');
+INSERT INTO ALTERNATE_FORM(ALTERNATE_FORM_ID, POKEMON_ID, ALTERNATE_FORM_NAME,
+                           ALTERNATE_FORM_IMAGE_URL) VALUE (3, 585, 'Autumn Deerling', 'https://raw.githubusercontent.com/PokeAPI/sprites/master/sprites/pokemon/585-autumn.png');
+INSERT INTO ALTERNATE_FORM(ALTERNATE_FORM_ID, POKEMON_ID, ALTERNATE_FORM_NAME,
+                           ALTERNATE_FORM_IMAGE_URL) VALUE (4, 585, 'Winter Deerling', 'https://raw.githubusercontent.com/PokeAPI/sprites/master/sprites/pokemon/585-winter.png');
+INSERT INTO ALTERNATE_FORM(ALTERNATE_FORM_ID, POKEMON_ID, ALTERNATE_FORM_NAME,
+                           ALTERNATE_FORM_IMAGE_URL) VALUE (1, 586, 'Spring Sawsbuck', 'https://raw.githubusercontent.com/PokeAPI/sprites/master/sprites/pokemon/586-spring.png');
+INSERT INTO ALTERNATE_FORM(ALTERNATE_FORM_ID, POKEMON_ID, ALTERNATE_FORM_NAME,
+                           ALTERNATE_FORM_IMAGE_URL) VALUE (2, 586, 'Summer Sawsbuck', 'https://raw.githubusercontent.com/PokeAPI/sprites/master/sprites/pokemon/586-summer.png');
+INSERT INTO ALTERNATE_FORM(ALTERNATE_FORM_ID, POKEMON_ID, ALTERNATE_FORM_NAME,
+                           ALTERNATE_FORM_IMAGE_URL) VALUE (3, 586, 'Autumn Sawsbuck', 'https://raw.githubusercontent.com/PokeAPI/sprites/master/sprites/pokemon/586-autumn.png');
+INSERT INTO ALTERNATE_FORM(ALTERNATE_FORM_ID, POKEMON_ID, ALTERNATE_FORM_NAME,
+                           ALTERNATE_FORM_IMAGE_URL) VALUE (4, 586, 'Winter Sawsbuck', 'https://raw.githubusercontent.com/PokeAPI/sprites/master/sprites/pokemon/586-winter.png');
+INSERT INTO ALTERNATE_FORM(ALTERNATE_FORM_ID, POKEMON_ID, ALTERNATE_FORM_NAME,
+                           ALTERNATE_FORM_IMAGE_URL) VALUE (1, 649, 'Douse Genesect', 'https://raw.githubusercontent.com/PokeAPI/sprites/master/sprites/pokemon/649-douse.png');
+INSERT INTO ALTERNATE_FORM(ALTERNATE_FORM_ID, POKEMON_ID, ALTERNATE_FORM_NAME,
+                           ALTERNATE_FORM_IMAGE_URL) VALUE (2, 649, 'Shock Genesect', 'https://raw.githubusercontent.com/PokeAPI/sprites/master/sprites/pokemon/649-shock.png');
+INSERT INTO ALTERNATE_FORM(ALTERNATE_FORM_ID, POKEMON_ID, ALTERNATE_FORM_NAME,
+                           ALTERNATE_FORM_IMAGE_URL) VALUE (3, 649, 'Burn Genesect', 'https://raw.githubusercontent.com/PokeAPI/sprites/master/sprites/pokemon/649-burn.png');
+INSERT INTO ALTERNATE_FORM(ALTERNATE_FORM_ID, POKEMON_ID, ALTERNATE_FORM_NAME,
+                           ALTERNATE_FORM_IMAGE_URL) VALUE (4, 649, 'Chill Genesect', 'https://raw.githubusercontent.com/PokeAPI/sprites/master/sprites/pokemon/649-chill.png');
+INSERT INTO ALTERNATE_FORM(ALTERNATE_FORM_ID, POKEMON_ID, ALTERNATE_FORM_NAME,
+                           ALTERNATE_FORM_IMAGE_URL) VALUE (1, 664, '', 'https://raw.githubusercontent.com/PokeAPI/sprites/master/sprites/pokemon/664-icy-snow.png');
+INSERT INTO ALTERNATE_FORM(ALTERNATE_FORM_ID, POKEMON_ID, ALTERNATE_FORM_NAME,
+                           ALTERNATE_FORM_IMAGE_URL) VALUE (1, 665, '', 'https://raw.githubusercontent.com/PokeAPI/sprites/master/sprites/pokemon/665-icy-snow.png');
+INSERT INTO ALTERNATE_FORM(ALTERNATE_FORM_ID, POKEMON_ID, ALTERNATE_FORM_NAME,
+                           ALTERNATE_FORM_IMAGE_URL) VALUE (1, 666, 'Meadow Vivillon', 'https://raw.githubusercontent.com/PokeAPI/sprites/master/sprites/pokemon/666-meadow.png');
+INSERT INTO ALTERNATE_FORM(ALTERNATE_FORM_ID, POKEMON_ID, ALTERNATE_FORM_NAME,
+                           ALTERNATE_FORM_IMAGE_URL) VALUE (2, 666, 'Icy Snow Vivillon', 'https://raw.githubusercontent.com/PokeAPI/sprites/master/sprites/pokemon/666-icy-snow.png');
+INSERT INTO ALTERNATE_FORM(ALTERNATE_FORM_ID, POKEMON_ID, ALTERNATE_FORM_NAME,
+                           ALTERNATE_FORM_IMAGE_URL) VALUE (3, 666, 'Polar Vivillon', 'https://raw.githubusercontent.com/PokeAPI/sprites/master/sprites/pokemon/666-polar.png');
+INSERT INTO ALTERNATE_FORM(ALTERNATE_FORM_ID, POKEMON_ID, ALTERNATE_FORM_NAME,
+                           ALTERNATE_FORM_IMAGE_URL) VALUE (4, 666, 'Tundra Vivillon', 'https://raw.githubusercontent.com/PokeAPI/sprites/master/sprites/pokemon/666-tundra.png');
+INSERT INTO ALTERNATE_FORM(ALTERNATE_FORM_ID, POKEMON_ID, ALTERNATE_FORM_NAME,
+                           ALTERNATE_FORM_IMAGE_URL) VALUE (5, 666, 'Continental Vivillon', 'https://raw.githubusercontent.com/PokeAPI/sprites/master/sprites/pokemon/666-continental.png');
+INSERT INTO ALTERNATE_FORM(ALTERNATE_FORM_ID, POKEMON_ID, ALTERNATE_FORM_NAME,
+                           ALTERNATE_FORM_IMAGE_URL) VALUE (6, 666, 'Garden Vivillon', 'https://raw.githubusercontent.com/PokeAPI/sprites/master/sprites/pokemon/666-garden.png');
+INSERT INTO ALTERNATE_FORM(ALTERNATE_FORM_ID, POKEMON_ID, ALTERNATE_FORM_NAME,
+                           ALTERNATE_FORM_IMAGE_URL) VALUE (7, 666, 'Elegant Vivillon', 'https://raw.githubusercontent.com/PokeAPI/sprites/master/sprites/pokemon/666-elegant.png');
+INSERT INTO ALTERNATE_FORM(ALTERNATE_FORM_ID, POKEMON_ID, ALTERNATE_FORM_NAME,
+                           ALTERNATE_FORM_IMAGE_URL) VALUE (8, 666, 'Modern Vivillon', 'https://raw.githubusercontent.com/PokeAPI/sprites/master/sprites/pokemon/666-modern.png');
+INSERT INTO ALTERNATE_FORM(ALTERNATE_FORM_ID, POKEMON_ID, ALTERNATE_FORM_NAME,
+                           ALTERNATE_FORM_IMAGE_URL) VALUE (9, 666, 'Marine Vivillon', 'https://raw.githubusercontent.com/PokeAPI/sprites/master/sprites/pokemon/666-marine.png');
+INSERT INTO ALTERNATE_FORM(ALTERNATE_FORM_ID, POKEMON_ID, ALTERNATE_FORM_NAME,
+                           ALTERNATE_FORM_IMAGE_URL) VALUE (10, 666, 'Archipelago Vivillon', 'https://raw.githubusercontent.com/PokeAPI/sprites/master/sprites/pokemon/666-archipelago.png');
+INSERT INTO ALTERNATE_FORM(ALTERNATE_FORM_ID, POKEMON_ID, ALTERNATE_FORM_NAME,
+                           ALTERNATE_FORM_IMAGE_URL) VALUE (11, 666, 'High Plains Vivillon', 'https://raw.githubusercontent.com/PokeAPI/sprites/master/sprites/pokemon/666-high-plains.png');
+INSERT INTO ALTERNATE_FORM(ALTERNATE_FORM_ID, POKEMON_ID, ALTERNATE_FORM_NAME,
+                           ALTERNATE_FORM_IMAGE_URL) VALUE (12, 666, 'Sandstorm Vivillon', 'https://raw.githubusercontent.com/PokeAPI/sprites/master/sprites/pokemon/666-sandstorm.png');
+INSERT INTO ALTERNATE_FORM(ALTERNATE_FORM_ID, POKEMON_ID, ALTERNATE_FORM_NAME,
+                           ALTERNATE_FORM_IMAGE_URL) VALUE (13, 666, 'River Vivillon', 'https://raw.githubusercontent.com/PokeAPI/sprites/master/sprites/pokemon/666-river.png');
+INSERT INTO ALTERNATE_FORM(ALTERNATE_FORM_ID, POKEMON_ID, ALTERNATE_FORM_NAME,
+                           ALTERNATE_FORM_IMAGE_URL) VALUE (14, 666, 'Monsoon Vivillon', 'https://raw.githubusercontent.com/PokeAPI/sprites/master/sprites/pokemon/666-monsoon.png');
+INSERT INTO ALTERNATE_FORM(ALTERNATE_FORM_ID, POKEMON_ID, ALTERNATE_FORM_NAME,
+                           ALTERNATE_FORM_IMAGE_URL) VALUE (15, 666, 'Savanna Vivillon', 'https://raw.githubusercontent.com/PokeAPI/sprites/master/sprites/pokemon/666-savanna.png');
+INSERT INTO ALTERNATE_FORM(ALTERNATE_FORM_ID, POKEMON_ID, ALTERNATE_FORM_NAME,
+                           ALTERNATE_FORM_IMAGE_URL) VALUE (16, 666, 'Sun Vivillon', 'https://raw.githubusercontent.com/PokeAPI/sprites/master/sprites/pokemon/666-sun.png');
+INSERT INTO ALTERNATE_FORM(ALTERNATE_FORM_ID, POKEMON_ID, ALTERNATE_FORM_NAME,
+                           ALTERNATE_FORM_IMAGE_URL) VALUE (17, 666, 'Ocean Vivillon', 'https://raw.githubusercontent.com/PokeAPI/sprites/master/sprites/pokemon/666-ocean.png');
+INSERT INTO ALTERNATE_FORM(ALTERNATE_FORM_ID, POKEMON_ID, ALTERNATE_FORM_NAME,
+                           ALTERNATE_FORM_IMAGE_URL) VALUE (18, 666, 'Jungle Vivillon', 'https://raw.githubusercontent.com/PokeAPI/sprites/master/sprites/pokemon/666-jungle.png');
+INSERT INTO ALTERNATE_FORM(ALTERNATE_FORM_ID, POKEMON_ID, ALTERNATE_FORM_NAME,
+                           ALTERNATE_FORM_IMAGE_URL) VALUE (19, 666, 'Fancy Vivillon', 'https://raw.githubusercontent.com/PokeAPI/sprites/master/sprites/pokemon/666-fancy.png');
+INSERT INTO ALTERNATE_FORM(ALTERNATE_FORM_ID, POKEMON_ID, ALTERNATE_FORM_NAME,
+                           ALTERNATE_FORM_IMAGE_URL) VALUE (20, 666, 'Poké Ball Vivillon', 'https://raw.githubusercontent.com/PokeAPI/sprites/master/sprites/pokemon/666-poke-ball.png');
+INSERT INTO ALTERNATE_FORM(ALTERNATE_FORM_ID, POKEMON_ID, ALTERNATE_FORM_NAME,
+                           ALTERNATE_FORM_IMAGE_URL) VALUE (1, 669, 'Red Flabébé', 'https://raw.githubusercontent.com/PokeAPI/sprites/master/sprites/pokemon/669-red.png');
+INSERT INTO ALTERNATE_FORM(ALTERNATE_FORM_ID, POKEMON_ID, ALTERNATE_FORM_NAME,
+                           ALTERNATE_FORM_IMAGE_URL) VALUE (2, 669, 'Yellow Flabébé', 'https://raw.githubusercontent.com/PokeAPI/sprites/master/sprites/pokemon/669-yellow.png');
+INSERT INTO ALTERNATE_FORM(ALTERNATE_FORM_ID, POKEMON_ID, ALTERNATE_FORM_NAME,
+                           ALTERNATE_FORM_IMAGE_URL) VALUE (3, 669, 'Orange Flabébé', 'https://raw.githubusercontent.com/PokeAPI/sprites/master/sprites/pokemon/669-orange.png');
+INSERT INTO ALTERNATE_FORM(ALTERNATE_FORM_ID, POKEMON_ID, ALTERNATE_FORM_NAME,
+                           ALTERNATE_FORM_IMAGE_URL) VALUE (4, 669, 'Blue Flabébé', 'https://raw.githubusercontent.com/PokeAPI/sprites/master/sprites/pokemon/669-blue.png');
+INSERT INTO ALTERNATE_FORM(ALTERNATE_FORM_ID, POKEMON_ID, ALTERNATE_FORM_NAME,
+                           ALTERNATE_FORM_IMAGE_URL) VALUE (5, 669, 'White Flabébé', 'https://raw.githubusercontent.com/PokeAPI/sprites/master/sprites/pokemon/669-white.png');
+INSERT INTO ALTERNATE_FORM(ALTERNATE_FORM_ID, POKEMON_ID, ALTERNATE_FORM_NAME,
+                           ALTERNATE_FORM_IMAGE_URL) VALUE (1, 670, 'Red Floette', 'https://raw.githubusercontent.com/PokeAPI/sprites/master/sprites/pokemon/670-red.png');
+INSERT INTO ALTERNATE_FORM(ALTERNATE_FORM_ID, POKEMON_ID, ALTERNATE_FORM_NAME,
+                           ALTERNATE_FORM_IMAGE_URL) VALUE (2, 670, 'Yellow Floette', 'https://raw.githubusercontent.com/PokeAPI/sprites/master/sprites/pokemon/670-yellow.png');
+INSERT INTO ALTERNATE_FORM(ALTERNATE_FORM_ID, POKEMON_ID, ALTERNATE_FORM_NAME,
+                           ALTERNATE_FORM_IMAGE_URL) VALUE (3, 670, 'Orange Floette', 'https://raw.githubusercontent.com/PokeAPI/sprites/master/sprites/pokemon/670-orange.png');
+INSERT INTO ALTERNATE_FORM(ALTERNATE_FORM_ID, POKEMON_ID, ALTERNATE_FORM_NAME,
+                           ALTERNATE_FORM_IMAGE_URL) VALUE (4, 670, 'Blue Floette', 'https://raw.githubusercontent.com/PokeAPI/sprites/master/sprites/pokemon/670-blue.png');
+INSERT INTO ALTERNATE_FORM(ALTERNATE_FORM_ID, POKEMON_ID, ALTERNATE_FORM_NAME,
+                           ALTERNATE_FORM_IMAGE_URL) VALUE (5, 670, 'White Floette', 'https://raw.githubusercontent.com/PokeAPI/sprites/master/sprites/pokemon/670-white.png');
+INSERT INTO ALTERNATE_FORM(ALTERNATE_FORM_ID, POKEMON_ID, ALTERNATE_FORM_NAME,
+                           ALTERNATE_FORM_IMAGE_URL) VALUE (1, 671, 'Red Florges', 'https://raw.githubusercontent.com/PokeAPI/sprites/master/sprites/pokemon/671-red.png');
+INSERT INTO ALTERNATE_FORM(ALTERNATE_FORM_ID, POKEMON_ID, ALTERNATE_FORM_NAME,
+                           ALTERNATE_FORM_IMAGE_URL) VALUE (2, 671, 'Yellow Florges', 'https://raw.githubusercontent.com/PokeAPI/sprites/master/sprites/pokemon/671-yellow.png');
+INSERT INTO ALTERNATE_FORM(ALTERNATE_FORM_ID, POKEMON_ID, ALTERNATE_FORM_NAME,
+                           ALTERNATE_FORM_IMAGE_URL) VALUE (3, 671, 'Orange Florges', 'https://raw.githubusercontent.com/PokeAPI/sprites/master/sprites/pokemon/671-orange.png');
+INSERT INTO ALTERNATE_FORM(ALTERNATE_FORM_ID, POKEMON_ID, ALTERNATE_FORM_NAME,
+                           ALTERNATE_FORM_IMAGE_URL) VALUE (4, 671, 'Blue Florges', 'https://raw.githubusercontent.com/PokeAPI/sprites/master/sprites/pokemon/671-blue.png');
+INSERT INTO ALTERNATE_FORM(ALTERNATE_FORM_ID, POKEMON_ID, ALTERNATE_FORM_NAME,
+                           ALTERNATE_FORM_IMAGE_URL) VALUE (5, 671, 'White Florges', 'https://raw.githubusercontent.com/PokeAPI/sprites/master/sprites/pokemon/671-white.png');
+INSERT INTO ALTERNATE_FORM(ALTERNATE_FORM_ID, POKEMON_ID, ALTERNATE_FORM_NAME,
+                           ALTERNATE_FORM_IMAGE_URL) VALUE (1, 676, 'Natural Furfrou', 'https://raw.githubusercontent.com/PokeAPI/sprites/master/sprites/pokemon/676-natural.png');
+INSERT INTO ALTERNATE_FORM(ALTERNATE_FORM_ID, POKEMON_ID, ALTERNATE_FORM_NAME,
+                           ALTERNATE_FORM_IMAGE_URL) VALUE (2, 676, 'Heart Furfrou', 'https://raw.githubusercontent.com/PokeAPI/sprites/master/sprites/pokemon/676-heart.png');
+INSERT INTO ALTERNATE_FORM(ALTERNATE_FORM_ID, POKEMON_ID, ALTERNATE_FORM_NAME,
+                           ALTERNATE_FORM_IMAGE_URL) VALUE (3, 676, 'Star Furfrou', 'https://raw.githubusercontent.com/PokeAPI/sprites/master/sprites/pokemon/676-star.png');
+INSERT INTO ALTERNATE_FORM(ALTERNATE_FORM_ID, POKEMON_ID, ALTERNATE_FORM_NAME,
+                           ALTERNATE_FORM_IMAGE_URL) VALUE (4, 676, 'Diamond Furfrou', 'https://raw.githubusercontent.com/PokeAPI/sprites/master/sprites/pokemon/676-diamond.png');
+INSERT INTO ALTERNATE_FORM(ALTERNATE_FORM_ID, POKEMON_ID, ALTERNATE_FORM_NAME,
+                           ALTERNATE_FORM_IMAGE_URL) VALUE (5, 676, 'Debutante Furfrou', 'https://raw.githubusercontent.com/PokeAPI/sprites/master/sprites/pokemon/676-debutante.png');
+INSERT INTO ALTERNATE_FORM(ALTERNATE_FORM_ID, POKEMON_ID, ALTERNATE_FORM_NAME,
+                           ALTERNATE_FORM_IMAGE_URL) VALUE (6, 676, 'Matron Furfrou', 'https://raw.githubusercontent.com/PokeAPI/sprites/master/sprites/pokemon/676-matron.png');
+INSERT INTO ALTERNATE_FORM(ALTERNATE_FORM_ID, POKEMON_ID, ALTERNATE_FORM_NAME,
+                           ALTERNATE_FORM_IMAGE_URL) VALUE (7, 676, 'Dandy Furfrou', 'https://raw.githubusercontent.com/PokeAPI/sprites/master/sprites/pokemon/676-dandy.png');
+INSERT INTO ALTERNATE_FORM(ALTERNATE_FORM_ID, POKEMON_ID, ALTERNATE_FORM_NAME,
+                           ALTERNATE_FORM_IMAGE_URL) VALUE (8, 676, 'La Reine Furfrou', 'https://raw.githubusercontent.com/PokeAPI/sprites/master/sprites/pokemon/676-la-reine.png');
+INSERT INTO ALTERNATE_FORM(ALTERNATE_FORM_ID, POKEMON_ID, ALTERNATE_FORM_NAME,
+                           ALTERNATE_FORM_IMAGE_URL) VALUE (9, 676, 'Kabuki Furfrou', 'https://raw.githubusercontent.com/PokeAPI/sprites/master/sprites/pokemon/676-kabuki.png');
+INSERT INTO ALTERNATE_FORM(ALTERNATE_FORM_ID, POKEMON_ID, ALTERNATE_FORM_NAME,
+                           ALTERNATE_FORM_IMAGE_URL) VALUE (10, 676, 'Pharaoh Furfrou', 'https://raw.githubusercontent.com/PokeAPI/sprites/master/sprites/pokemon/676-pharaoh.png');
+INSERT INTO ALTERNATE_FORM(ALTERNATE_FORM_ID, POKEMON_ID, ALTERNATE_FORM_NAME,
+                           ALTERNATE_FORM_IMAGE_URL) VALUE (1, 716, 'Active Xerneas', 'https://raw.githubusercontent.com/PokeAPI/sprites/master/sprites/pokemon/716-active.png');
+INSERT INTO ALTERNATE_FORM(ALTERNATE_FORM_ID, POKEMON_ID, ALTERNATE_FORM_NAME,
+                           ALTERNATE_FORM_IMAGE_URL) VALUE (2, 716, 'Neutral Xerneas', 'https://raw.githubusercontent.com/PokeAPI/sprites/master/sprites/pokemon/716-neutral.png');
+INSERT INTO ALTERNATE_FORM(ALTERNATE_FORM_ID, POKEMON_ID, ALTERNATE_FORM_NAME,
+                           ALTERNATE_FORM_IMAGE_URL) VALUE (1, 773, '', 'https://raw.githubusercontent.com/PokeAPI/sprites/master/sprites/pokemon/773-normal.png');
+INSERT INTO ALTERNATE_FORM(ALTERNATE_FORM_ID, POKEMON_ID, ALTERNATE_FORM_NAME,
+                           ALTERNATE_FORM_IMAGE_URL) VALUE (2, 773, '', 'https://raw.githubusercontent.com/PokeAPI/sprites/master/sprites/pokemon/773-fighting.png');
+INSERT INTO ALTERNATE_FORM(ALTERNATE_FORM_ID, POKEMON_ID, ALTERNATE_FORM_NAME,
+                           ALTERNATE_FORM_IMAGE_URL) VALUE (3, 773, '', 'https://raw.githubusercontent.com/PokeAPI/sprites/master/sprites/pokemon/773-flying.png');
+INSERT INTO ALTERNATE_FORM(ALTERNATE_FORM_ID, POKEMON_ID, ALTERNATE_FORM_NAME,
+                           ALTERNATE_FORM_IMAGE_URL) VALUE (4, 773, '', 'https://raw.githubusercontent.com/PokeAPI/sprites/master/sprites/pokemon/773-poison.png');
+INSERT INTO ALTERNATE_FORM(ALTERNATE_FORM_ID, POKEMON_ID, ALTERNATE_FORM_NAME,
+                           ALTERNATE_FORM_IMAGE_URL) VALUE (5, 773, '', 'https://raw.githubusercontent.com/PokeAPI/sprites/master/sprites/pokemon/773-ground.png');
+INSERT INTO ALTERNATE_FORM(ALTERNATE_FORM_ID, POKEMON_ID, ALTERNATE_FORM_NAME,
+                           ALTERNATE_FORM_IMAGE_URL) VALUE (6, 773, '', 'https://raw.githubusercontent.com/PokeAPI/sprites/master/sprites/pokemon/773-rock.png');
+INSERT INTO ALTERNATE_FORM(ALTERNATE_FORM_ID, POKEMON_ID, ALTERNATE_FORM_NAME,
+                           ALTERNATE_FORM_IMAGE_URL) VALUE (7, 773, '', 'https://raw.githubusercontent.com/PokeAPI/sprites/master/sprites/pokemon/773-bug.png');
+INSERT INTO ALTERNATE_FORM(ALTERNATE_FORM_ID, POKEMON_ID, ALTERNATE_FORM_NAME,
+                           ALTERNATE_FORM_IMAGE_URL) VALUE (8, 773, '', 'https://raw.githubusercontent.com/PokeAPI/sprites/master/sprites/pokemon/773-ghost.png');
+INSERT INTO ALTERNATE_FORM(ALTERNATE_FORM_ID, POKEMON_ID, ALTERNATE_FORM_NAME,
+                           ALTERNATE_FORM_IMAGE_URL) VALUE (9, 773, '', 'https://raw.githubusercontent.com/PokeAPI/sprites/master/sprites/pokemon/773-steel.png');
+INSERT INTO ALTERNATE_FORM(ALTERNATE_FORM_ID, POKEMON_ID, ALTERNATE_FORM_NAME,
+                           ALTERNATE_FORM_IMAGE_URL) VALUE (10, 773, '', 'https://raw.githubusercontent.com/PokeAPI/sprites/master/sprites/pokemon/773-fire.png');
+INSERT INTO ALTERNATE_FORM(ALTERNATE_FORM_ID, POKEMON_ID, ALTERNATE_FORM_NAME,
+                           ALTERNATE_FORM_IMAGE_URL) VALUE (11, 773, '', 'https://raw.githubusercontent.com/PokeAPI/sprites/master/sprites/pokemon/773-water.png');
+INSERT INTO ALTERNATE_FORM(ALTERNATE_FORM_ID, POKEMON_ID, ALTERNATE_FORM_NAME,
+                           ALTERNATE_FORM_IMAGE_URL) VALUE (12, 773, '', 'https://raw.githubusercontent.com/PokeAPI/sprites/master/sprites/pokemon/773-grass.png');
+INSERT INTO ALTERNATE_FORM(ALTERNATE_FORM_ID, POKEMON_ID, ALTERNATE_FORM_NAME,
+                           ALTERNATE_FORM_IMAGE_URL) VALUE (13, 773, '', 'https://raw.githubusercontent.com/PokeAPI/sprites/master/sprites/pokemon/773-electric.png');
+INSERT INTO ALTERNATE_FORM(ALTERNATE_FORM_ID, POKEMON_ID, ALTERNATE_FORM_NAME,
+                           ALTERNATE_FORM_IMAGE_URL) VALUE (14, 773, '', 'https://raw.githubusercontent.com/PokeAPI/sprites/master/sprites/pokemon/773-psychic.png');
+INSERT INTO ALTERNATE_FORM(ALTERNATE_FORM_ID, POKEMON_ID, ALTERNATE_FORM_NAME,
+                           ALTERNATE_FORM_IMAGE_URL) VALUE (15, 773, '', 'https://raw.githubusercontent.com/PokeAPI/sprites/master/sprites/pokemon/773-ice.png');
+INSERT INTO ALTERNATE_FORM(ALTERNATE_FORM_ID, POKEMON_ID, ALTERNATE_FORM_NAME,
+                           ALTERNATE_FORM_IMAGE_URL) VALUE (16, 773, '', 'https://raw.githubusercontent.com/PokeAPI/sprites/master/sprites/pokemon/773-dragon.png');
+INSERT INTO ALTERNATE_FORM(ALTERNATE_FORM_ID, POKEMON_ID, ALTERNATE_FORM_NAME,
+                           ALTERNATE_FORM_IMAGE_URL) VALUE (17, 773, '', 'https://raw.githubusercontent.com/PokeAPI/sprites/master/sprites/pokemon/773-dark.png');
+INSERT INTO ALTERNATE_FORM(ALTERNATE_FORM_ID, POKEMON_ID, ALTERNATE_FORM_NAME,
+                           ALTERNATE_FORM_IMAGE_URL) VALUE (18, 773, '', 'https://raw.githubusercontent.com/PokeAPI/sprites/master/sprites/pokemon/773-fairy.png');

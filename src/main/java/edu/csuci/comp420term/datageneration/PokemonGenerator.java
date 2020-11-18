@@ -3,11 +3,13 @@ package edu.csuci.comp420term.datageneration;
 import edu.csuci.comp420term.entities.*;
 import org.apache.commons.text.WordUtils;
 import org.json.JSONArray;
+import org.json.JSONException;
 import org.json.JSONObject;
 
 import java.io.IOException;
 import java.util.*;
 import java.util.function.Predicate;
+import java.util.stream.Collectors;
 
 import static edu.csuci.comp420term.datageneration.JSONApiHelpers.fetchAPICall;
 import static edu.csuci.comp420term.entities.JSONEntity.filterJsonArray;
@@ -51,6 +53,8 @@ public class PokemonGenerator {
 
         final String description = getDescription(speciesJSON);
 
+        final List<AlternateForm> alternateForms = getAlternateForms(pokemonJSON);
+
         final List<BaseStat> baseStats = getBaseStats(pokemonJSON);
         return new Pokemon(
                 this.pokedexId,
@@ -64,7 +68,32 @@ public class PokemonGenerator {
                 pokemonName,
                 description,
                 imageUrl,
-                baseStats);
+                baseStats, alternateForms);
+    }
+
+    private List<AlternateForm> getAlternateForms(JSONObject pokemonJSON) throws IOException, InterruptedException {
+        final List<AlternateForm> alternateForms = new ArrayList<>();
+        final JSONArray forms = pokemonJSON.getJSONArray("forms");
+        final List<String> alternateFormUrls = filterJsonArray(forms, jsonObject -> !jsonObject.getString("name").equals(pokemonJSON.getString("name")))
+                .stream()
+                .map(jsonObject -> jsonObject.getString("url"))
+                .collect(Collectors.toList());
+        if (alternateFormUrls.size() > 0) {
+            for (int i = 0; i < alternateFormUrls.size(); i++) {
+                final int alternateFormId = i + 1;
+                String alternateFormUrl = alternateFormUrls.get(i);
+                final JSONObject alternateFormJSON = fetchAPICall(alternateFormUrl);
+                final String alternateFormName = JSONApiHelpers.getEnglishName(alternateFormJSON);
+                final JSONObject sprites = alternateFormJSON.getJSONObject("sprites");
+                try {
+                    final String alternateFormImageUrl = sprites.getString("front_default");
+                    alternateForms.add(new AlternateForm(alternateFormId, this.pokedexId, alternateFormName, alternateFormImageUrl));
+                } catch (JSONException ignored) {
+
+                }
+            }
+        }
+        return alternateForms;
     }
 
     private List<BaseStat> getBaseStats(JSONObject pokemonJSON) throws IOException, InterruptedException {
