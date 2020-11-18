@@ -28,7 +28,9 @@ public class Pokemon extends JSONEntity implements Comparable<Pokemon> {
 
     public final List<AlternateForm> alternateForms;
 
-    public Pokemon(int id, Type primaryType, Type secondaryType, EggGroup primaryEggGroup, EggGroup secondaryEggGroup, Ability primaryAbility, Ability secondaryAbility, Ability hiddenAbility, String name, String description, String imageFilePath, List<BaseStat> baseStats, List<AlternateForm> alternateForms) {
+    public final List<EvolutionMethod> evolutionMethods;
+
+    public Pokemon(int id, Type primaryType, Type secondaryType, EggGroup primaryEggGroup, EggGroup secondaryEggGroup, Ability primaryAbility, Ability secondaryAbility, Ability hiddenAbility, String name, String description, String imageFilePath, List<BaseStat> baseStats, List<AlternateForm> alternateForms, List<EvolutionMethod> evolutionMethods) {
         this.id = id;
         this.primaryType = primaryType;
         this.secondaryType = secondaryType;
@@ -42,6 +44,7 @@ public class Pokemon extends JSONEntity implements Comparable<Pokemon> {
         this.imageFilePath = imageFilePath;
         this.baseStats = baseStats.stream().collect(Collectors.toUnmodifiableList());
         this.alternateForms = alternateForms.stream().collect(Collectors.toUnmodifiableList());
+        this.evolutionMethods = evolutionMethods.stream().collect(Collectors.toUnmodifiableList());
     }
 
     public Optional<Type> getSecondaryType() {
@@ -87,6 +90,8 @@ public class Pokemon extends JSONEntity implements Comparable<Pokemon> {
         json.put("base_stats", JSONEntity.mapCollectionToJSONArray(this.baseStats));
 
         json.put("alternate_forms", JSONEntity.mapCollectionToJSONArray(this.alternateForms));
+
+        json.put("evolution_methods", JSONEntity.mapCollectionToJSONArray(this.evolutionMethods));
 
         return json;
     }

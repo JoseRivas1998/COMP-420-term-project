@@ -19,7 +19,7 @@ import java.util.concurrent.Semaphore;
 
 public class JSONApiHelpers {
 
-    private static final Semaphore apiLimiter = new Semaphore(300);
+    private static final Semaphore apiLimiter = new Semaphore(100);
 
     private static long totalApiCalls = 0;
     private static long totalApiCallTime = 0;

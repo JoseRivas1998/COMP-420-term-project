@@ -46,6 +46,11 @@ public class PokemonGeneratorClient {
         final Set<Type> types = new TreeSet<>(Comparator.comparing(type -> type.id));
         types.addAll(PokemonGenerator.TYPE_TABLE.values());
 
+        final List<EvolutionMethod> evolutionMethods = EvolutionMethodsGenerator.evolutionMethods()
+                .stream()
+                .sorted(Comparator.comparing(evolutionMethod -> evolutionMethod.pokemonId))
+                .collect(Collectors.toList());
+
         final List<String> insertEggGroupSQLStatements = new ArrayList<>();
         final List<String> insertAbilitySQLStatements = new ArrayList<>();
         final List<String> insertTypeSqlStatements = new ArrayList<>();
@@ -55,6 +60,7 @@ public class PokemonGeneratorClient {
         final List<String> insertNatureStatSqlStatements = new ArrayList<>();
         final List<String> insertBaseStatSQLStatements = new ArrayList<>();
         final List<String> insertAlternateFormSQLStatements = new ArrayList<>();
+        final List<String> insertEvolutionMethodSQLStatements = new ArrayList<>();
 
         try (Connection connection = ConnectionBuilder.buildConnection();
              PreparedStatement insertEggGroup = connection.prepareStatement("INSERT INTO EGG_GROUP(EGG_GROUP_ID, EGG_GROUP_NAME) VALUE (?, ?);");
@@ -68,7 +74,8 @@ public class PokemonGeneratorClient {
                      "                    POKEMON_IMAGE_URL) VALUE (?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?);");
              PreparedStatement insertBaseStat = connection.prepareStatement("INSERT INTO BASE_STAT(STAT_ID, POKEMON_ID, STAT_VALUE) VALUE (?, ?, ?);");
              PreparedStatement insertAlternateForm = connection.prepareStatement("INSERT INTO ALTERNATE_FORM(ALTERNATE_FORM_ID, POKEMON_ID, ALTERNATE_FORM_NAME,\r\n" +
-                     "                           ALTERNATE_FORM_IMAGE_URL) VALUE (?, ?, ?, ?);")) {
+                     "                           ALTERNATE_FORM_IMAGE_URL) VALUE (?, ?, ?, ?);");
+             PreparedStatement insertEvolutionMethod = connection.prepareStatement("INSERT INTO EVOLUTION_METHOD(POKEMON_ID, EVOLVES_INTO_ID, METHOD_DESCRIPTION) VALUE (?, ?, ?);")) {
             addAllEggGroupInsertStatements(eggGroups, insertEggGroupSQLStatements, insertEggGroup);
             addAllAbilityInsertStatements(abilities, insertAbilitySQLStatements, insertAbility);
             addAllTypeInsertStatements(types, insertTypeSqlStatements, insertType);
@@ -92,10 +99,21 @@ public class PokemonGeneratorClient {
                 addAllAlternateFormsToInsertStatements(insertAlternateFormSQLStatements, insertAlternateForm, pokemon);
             }
 
+            for (EvolutionMethod evolutionMethod : evolutionMethods) {
+                insertEvolutionMethod.setInt(1, evolutionMethod.pokemonId);
+                insertEvolutionMethod.setInt(2, evolutionMethod.evolvesIntoId);
+                insertEvolutionMethod.setString(3, evolutionMethod.method);
+                insertEvolutionMethodSQLStatements.add(getInsertSQL(insertEvolutionMethod));
+            }
+
         }
 
         final String deleteStatements = "DELETE\r\n" +
                 "FROM BASE_STAT\r\n" +
+                "WHERE TRUE;\r\n" +
+                "\r\n" +
+                "DELETE\r\n" +
+                "FROM EVOLUTION_METHOD\r\n" +
                 "WHERE TRUE;\r\n" +
                 "\r\n" +
                 "DELETE\r\n" +
@@ -156,7 +174,9 @@ public class PokemonGeneratorClient {
                 "\r\n" +
                 insertStatementListToSingleString(insertBaseStatSQLStatements) +
                 "\r\n" +
-                insertStatementListToSingleString(insertAlternateFormSQLStatements);
+                insertStatementListToSingleString(insertAlternateFormSQLStatements)+
+                "\r\n" +
+                insertStatementListToSingleString(insertEvolutionMethodSQLStatements);
 
         try (FileWriter sqlFileWriter = new FileWriter(SQL_FILE_NAME, StandardCharsets.UTF_8)) {
             sqlFileWriter.write(sqlFileContent);

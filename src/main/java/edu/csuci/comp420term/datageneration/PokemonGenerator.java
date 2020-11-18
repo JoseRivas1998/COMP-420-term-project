@@ -56,6 +56,11 @@ public class PokemonGenerator {
         final List<AlternateForm> alternateForms = getAlternateForms(pokemonJSON);
 
         final List<BaseStat> baseStats = getBaseStats(pokemonJSON);
+
+        final String evolutionChainUrl = speciesJSON.getJSONObject("evolution_chain").getString("url");
+        final EvolutionMethodsGenerator evolutionMethodsGenerator = new EvolutionMethodsGenerator(evolutionChainUrl);
+        evolutionMethodsGenerator.generate();
+
         return new Pokemon(
                 this.pokedexId,
                 primaryType,
@@ -68,7 +73,9 @@ public class PokemonGenerator {
                 pokemonName,
                 description,
                 imageUrl,
-                baseStats, alternateForms);
+                baseStats,
+                alternateForms,
+                new ArrayList<>());
     }
 
     private List<AlternateForm> getAlternateForms(JSONObject pokemonJSON) throws IOException, InterruptedException {
