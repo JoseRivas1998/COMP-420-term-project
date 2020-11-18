@@ -62,31 +62,9 @@ public class PokemonGeneratorClient {
              PreparedStatement insertPokemon = connection.prepareStatement("INSERT INTO POKEMON(POKEMON_ID, PRIMARY_TYPE, SECONDARY_TYPE, PRIMARY_EGG_GROUP, SECONDARY_EGG_GROUP, PRIMARY_ABILITY,\r\n" +
                      "                    SECONDARY_ABILITY, HIDDEN_ABILITY, POKEMON_NAME, POKEMON_DESCRIPTION,\r\n" +
                      "                    POKEMON_IMAGE_URL) VALUE (?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?);")) {
-            for (EggGroup eggGroup : eggGroups) {
-                insertEggGroup.setInt(1, eggGroup.id);
-                insertEggGroup.setString(2, eggGroup.name);
-                insertEggGroupSQLStatements.add(getInsertSQL(insertEggGroup));
-            }
-            for (Ability ability : abilities) {
-                insertAbility.setInt(1, ability.id);
-                insertAbility.setString(2, ability.name);
-                insertAbility.setString(3, ability.effect);
-                insertAbilitySQLStatements.add(getInsertSQL(insertAbility));
-            }
-            for (Pokemon pokemon : pokemons) {
-                insertPokemon.setInt(1, pokemon.id);
-                insertPokemon.setInt(2, pokemon.primaryType.id);
-                setOptionalIntField(insertPokemon, 3, pokemon::getSecondaryType, type -> type.id);
-                insertPokemon.setInt(4, pokemon.primaryEggGroup.id);
-                setOptionalIntField(insertPokemon, 5, pokemon::getSecondaryEggGroup, eggGroup -> eggGroup.id);
-                insertPokemon.setInt(6, pokemon.primaryAbility.id);
-                setOptionalIntField(insertPokemon, 7, pokemon::getSecondaryAbility, ability -> ability.id);
-                setOptionalIntField(insertPokemon, 8, pokemon::getHiddenAbility, ability -> ability.id);
-                insertPokemon.setString(9, pokemon.name);
-                insertPokemon.setString(10, pokemon.description);
-                insertPokemon.setString(11, pokemon.imageFilePath);
-                insertPokemonSQLStatements.add(getInsertSQL(insertPokemon));
-            }
+            addAllEggGroupInsertStatements(eggGroups, insertEggGroupSQLStatements, insertEggGroup);
+            addAllAbilityInsertStatements(abilities, insertAbilitySQLStatements, insertAbility);
+            addAllPokemonInsertStatements(pokemons, insertPokemonSQLStatements, insertPokemon);
 
         }
 
@@ -114,6 +92,52 @@ public class PokemonGeneratorClient {
         try (FileWriter sqlFileWriter = new FileWriter(SQL_FILE_NAME, StandardCharsets.UTF_8)) {
             sqlFileWriter.write(sqlFileContent);
         }
+    }
+
+    private static void addAllPokemonInsertStatements(List<Pokemon> pokemons, List<String> insertPokemonSQLStatements, PreparedStatement insertPokemon) throws SQLException {
+        for (Pokemon pokemon : pokemons) {
+            addPokemonInsertStatement(insertPokemonSQLStatements, insertPokemon, pokemon);
+        }
+    }
+
+    private static void addAllAbilityInsertStatements(Set<Ability> abilities, List<String> insertAbilitySQLStatements, PreparedStatement insertAbility) throws SQLException {
+        for (Ability ability : abilities) {
+            addAbilityInsertStatement(insertAbilitySQLStatements, insertAbility, ability);
+        }
+    }
+
+    private static void addAllEggGroupInsertStatements(Set<EggGroup> eggGroups, List<String> insertEggGroupSQLStatements, PreparedStatement insertEggGroup) throws SQLException {
+        for (EggGroup eggGroup : eggGroups) {
+            addEggGroupInsertStatement(insertEggGroupSQLStatements, insertEggGroup, eggGroup);
+        }
+    }
+
+    private static void addPokemonInsertStatement(List<String> insertPokemonSQLStatements, PreparedStatement insertPokemon, Pokemon pokemon) throws SQLException {
+        insertPokemon.setInt(1, pokemon.id);
+        insertPokemon.setInt(2, pokemon.primaryType.id);
+        setOptionalIntField(insertPokemon, 3, pokemon::getSecondaryType, type -> type.id);
+        insertPokemon.setInt(4, pokemon.primaryEggGroup.id);
+        setOptionalIntField(insertPokemon, 5, pokemon::getSecondaryEggGroup, eggGroup -> eggGroup.id);
+        insertPokemon.setInt(6, pokemon.primaryAbility.id);
+        setOptionalIntField(insertPokemon, 7, pokemon::getSecondaryAbility, ability -> ability.id);
+        setOptionalIntField(insertPokemon, 8, pokemon::getHiddenAbility, ability -> ability.id);
+        insertPokemon.setString(9, pokemon.name);
+        insertPokemon.setString(10, pokemon.description);
+        insertPokemon.setString(11, pokemon.imageFilePath);
+        insertPokemonSQLStatements.add(getInsertSQL(insertPokemon));
+    }
+
+    private static void addAbilityInsertStatement(List<String> insertAbilitySQLStatements, PreparedStatement insertAbility, Ability ability) throws SQLException {
+        insertAbility.setInt(1, ability.id);
+        insertAbility.setString(2, ability.name);
+        insertAbility.setString(3, ability.effect);
+        insertAbilitySQLStatements.add(getInsertSQL(insertAbility));
+    }
+
+    private static void addEggGroupInsertStatement(List<String> insertEggGroupSQLStatements, PreparedStatement insertEggGroup, EggGroup eggGroup) throws SQLException {
+        insertEggGroup.setInt(1, eggGroup.id);
+        insertEggGroup.setString(2, eggGroup.name);
+        insertEggGroupSQLStatements.add(getInsertSQL(insertEggGroup));
     }
 
     private static <T> void setOptionalIntField(PreparedStatement statement, int parameterIndex, Supplier<Optional<T>> fieldSupplier, ToIntFunction<T> toIntFunction) throws SQLException {
