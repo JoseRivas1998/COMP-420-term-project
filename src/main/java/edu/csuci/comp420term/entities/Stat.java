@@ -36,7 +36,7 @@ public class Stat extends JSONEntity {
             if (obj == null || obj.getClass() != this.getClass()) {
                 result = false;
             } else {
-                Type other = (Type) obj;
+                Stat other = (Stat) obj;
                 result = this.id == other.id;
             }
         }
