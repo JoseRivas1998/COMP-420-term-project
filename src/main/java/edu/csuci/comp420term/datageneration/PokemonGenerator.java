@@ -1,6 +1,7 @@
 package edu.csuci.comp420term.datageneration;
 
 import edu.csuci.comp420term.entities.Ability;
+import edu.csuci.comp420term.entities.EggGroup;
 import edu.csuci.comp420term.entities.Type;
 import org.apache.commons.text.WordUtils;
 import org.json.JSONArray;
@@ -39,8 +40,8 @@ public class PokemonGenerator {
 
         final JSONObject speciesJSON = fetchSpeciesJSON(pokemonJSON);
         final JSONArray eggGroups = speciesJSON.getJSONArray("egg_groups");
-        Optional<String> primaryEggGroup = optionalEggGroupNameAtIndex(eggGroups, 0);
-        Optional<String> secondaryEggGroup = optionalEggGroupNameAtIndex(eggGroups, 1);
+        EggGroup primaryEggGroup = optionalEggGroupNameAtIndex(eggGroups, 0).orElseThrow();
+        Optional<EggGroup> secondaryEggGroup = optionalEggGroupNameAtIndex(eggGroups, 1);
 
         final String imageUrl = getImageUrl(pokemonJSON);
 
@@ -60,8 +61,8 @@ public class PokemonGenerator {
         pokemonRowData.put("name", pokemonName);
         pokemonRowData.put("primary_type", primaryType.toJSON());
         secondaryType.ifPresent(type -> pokemonRowData.put("secondary_type", type.toJSON()));
-        pokemonRowData.put("primary_egg_group", primaryEggGroup.orElse(null));
-        pokemonRowData.put("secondary_egg_group", secondaryEggGroup.orElse(null));
+        pokemonRowData.put("primary_egg_group", primaryEggGroup.toJSON());
+        secondaryEggGroup.ifPresent(eggGroup -> pokemonRowData.put("secondary_egg_group", eggGroup.toJSON()));
         pokemonRowData.put("image_file_path", imageUrl);
         pokemonRowData.put("primary_ability", primaryAbility.toJSON());
         secondaryAbility.ifPresent(ability -> pokemonRowData.put("secondary_ability", ability.toJSON()));
@@ -96,13 +97,14 @@ public class PokemonGenerator {
         return officialArtworkJSON.getString("front_default");
     }
 
-    private Optional<String> optionalEggGroupNameAtIndex(JSONArray eggGroups, int eggGroupIndex) {
+    private Optional<EggGroup> optionalEggGroupNameAtIndex(JSONArray eggGroups, int eggGroupIndex) throws IOException {
         return eggGroups.length() > eggGroupIndex ? Optional.of(eggGroupNameAtIndex(eggGroups, eggGroupIndex)) : Optional.empty();
     }
 
-    private String eggGroupNameAtIndex(JSONArray eggGroups, int eggGroupIndex) {
+    private EggGroup eggGroupNameAtIndex(JSONArray eggGroups, int eggGroupIndex) throws IOException {
         final JSONObject eggGroup = eggGroups.getJSONObject(eggGroupIndex);
-        return eggGroup.getString("name");
+        final EggGroupGenerator eggGroupGenerator = new EggGroupGenerator(eggGroup.getString("url"));
+        return eggGroupGenerator.generate();
     }
 
     private Optional<Type> optionalTypeName(JSONArray types, int typeSlotIndex) {

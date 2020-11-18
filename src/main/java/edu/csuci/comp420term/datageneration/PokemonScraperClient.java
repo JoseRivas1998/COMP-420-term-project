@@ -9,7 +9,7 @@ import java.util.List;
 
 public class PokemonScraperClient {
 
-    public static final int NUM_POKEMON_TO_FETCH = 807;
+    public static final int NUM_POKEMON_TO_FETCH = 151;
 
     public static void main(String[] args) throws InterruptedException {
         final List<Thread> threads = new ArrayList<>();
