@@ -140,3 +140,5 @@ hs_err_pid*
 hs_err_pid*
 
 .idea/
+
+src/main/java/edu/csuci/comp420term/config/Config.java
