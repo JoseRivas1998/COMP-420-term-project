@@ -4,24 +4,19 @@ import edu.csuci.comp420term.data.ConnectionBuilder;
 import edu.csuci.comp420term.entities.Ability;
 import edu.csuci.comp420term.entities.EggGroup;
 import edu.csuci.comp420term.entities.Pokemon;
-import org.json.JSONArray;
-import org.json.JSONObject;
 
-import javax.swing.text.html.Option;
 import java.io.FileWriter;
 import java.io.IOException;
 import java.nio.charset.StandardCharsets;
 import java.sql.*;
 import java.util.*;
-import java.util.function.Function;
-import java.util.function.Predicate;
 import java.util.function.Supplier;
 import java.util.function.ToIntFunction;
 
-public class PokemonScraperClient {
+public class PokemonGeneratorClient {
 
     public static final int NUM_POKEMON_TO_FETCH = 807;
-    public static final String SQL_FILE_NAME = "sql/pokemon_abilities_egg_groups.sql";
+    public static final String SQL_FILE_NAME = "sql/pokemon_data.sql";
 
     public static void main(String[] args) throws InterruptedException, SQLException, IOException {
         final List<Thread> threads = new ArrayList<>();
@@ -32,7 +27,7 @@ public class PokemonScraperClient {
                 try {
                     final PokemonGenerator pokemonGenerator = new PokemonGenerator(pokedexNum);
                     final Pokemon pokemon = pokemonGenerator.generate();
-                    synchronized (PokemonScraperClient.class) {
+                    synchronized (PokemonGeneratorClient.class) {
                         pokemons.add(pokemon);
                     }
                 } catch (Exception exception) {
