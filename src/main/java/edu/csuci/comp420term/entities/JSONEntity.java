@@ -5,6 +5,7 @@ import org.json.JSONException;
 import org.json.JSONObject;
 
 import java.util.ArrayList;
+import java.util.Collection;
 import java.util.List;
 import java.util.function.Predicate;
 
@@ -34,6 +35,13 @@ public abstract class JSONEntity {
         return result;
     }
 
+    public static JSONArray mapCollectionToJSONArray(Collection<JSONEntity> jsonEntities) {
+        JSONArray jsonArray = new JSONArray();
+        jsonEntities.stream()
+                .map(JSONEntity::toJSON)
+                .forEach(jsonArray::put);
+        return jsonArray;
+    }
 
 
 }

@@ -57,6 +57,8 @@ public class PokemonGenerator {
 
         final String description = getDescription(speciesJSON);
 
+
+
         final JSONObject pokemonRowData = new JSONObject();
         pokemonRowData.put("id", this.pokedexId);
         pokemonRowData.put("name", pokemonName);
