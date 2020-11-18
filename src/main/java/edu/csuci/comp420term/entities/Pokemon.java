@@ -2,8 +2,9 @@ package edu.csuci.comp420term.entities;
 
 import org.json.JSONObject;
 
-import java.util.Comparator;
+import java.util.List;
 import java.util.Optional;
+import java.util.stream.Collectors;
 
 public class Pokemon extends JSONEntity implements Comparable<Pokemon> {
 
@@ -23,7 +24,9 @@ public class Pokemon extends JSONEntity implements Comparable<Pokemon> {
     public final String description;
     public final String imageFilePath;
 
-    public Pokemon(int id, Type primaryType, Type secondaryType, EggGroup primaryEggGroup, EggGroup secondaryEggGroup, Ability primaryAbility, Ability secondaryAbility, Ability hiddenAbility, String name, String description, String imageFilePath) {
+    public final List<BaseStat> baseStats;
+
+    public Pokemon(int id, Type primaryType, Type secondaryType, EggGroup primaryEggGroup, EggGroup secondaryEggGroup, Ability primaryAbility, Ability secondaryAbility, Ability hiddenAbility, String name, String description, String imageFilePath, List<BaseStat> baseStats) {
         this.id = id;
         this.primaryType = primaryType;
         this.secondaryType = secondaryType;
@@ -35,6 +38,7 @@ public class Pokemon extends JSONEntity implements Comparable<Pokemon> {
         this.name = name;
         this.description = description;
         this.imageFilePath = imageFilePath;
+        this.baseStats = baseStats.stream().collect(Collectors.toUnmodifiableList());
     }
 
     public Optional<Type> getSecondaryType() {
@@ -76,6 +80,8 @@ public class Pokemon extends JSONEntity implements Comparable<Pokemon> {
         json.put("name", this.name);
         json.put("description", this.description);
         json.put("image_file_path", this.imageFilePath);
+
+        json.put("baseStats", JSONEntity.mapCollectionToJSONArray(this.baseStats));
 
         return json;
     }

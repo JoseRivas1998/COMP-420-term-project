@@ -19,7 +19,7 @@ public class EggGroupGenerator {
         this.url = url;
     }
 
-    public EggGroup generate() throws IOException {
+    public EggGroup generate() throws IOException, InterruptedException {
         if (generatedEggGroups.containsKey(this.url)) {
             return generatedEggGroups.get(this.url);
         }
@@ -28,9 +28,7 @@ public class EggGroupGenerator {
 
         final int id = eggGroupJSON.getInt("id");
 
-        final JSONArray namesArray = eggGroupJSON.getJSONArray("names");
-        final List<JSONObject> englishNames = JSONEntity.filterJsonArray(namesArray, name -> name.getJSONObject("language").getString("name").equals("en"));
-        final String name = englishNames.size() == 1 ? englishNames.get(0).getString("name") : "";
+        final String name = JSONApiHelpers.getEnglishName(eggGroupJSON);
 
         EggGroup eggGroup = new EggGroup(id, name);
         generatedEggGroups.put(this.url, eggGroup);

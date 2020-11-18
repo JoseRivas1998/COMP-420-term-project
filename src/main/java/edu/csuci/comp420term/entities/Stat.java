@@ -24,8 +24,8 @@ public class Stat extends JSONEntity {
         JSONObject json = new JSONObject();
         json.put("id", id);
         json.put("name", name);
-        json.put("decreasingNatures", decreasingNatures);
-        json.put("increasing_natures", increasingNatures);
+        json.put("decreasingNatures", JSONEntity.mapCollectionToJSONArray(decreasingNatures));
+        json.put("increasing_natures", JSONEntity.mapCollectionToJSONArray(increasingNatures));
         return json;
     }
 

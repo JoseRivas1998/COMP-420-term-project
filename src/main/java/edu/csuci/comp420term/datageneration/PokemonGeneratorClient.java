@@ -1,10 +1,7 @@
 package edu.csuci.comp420term.datageneration;
 
 import edu.csuci.comp420term.data.ConnectionBuilder;
-import edu.csuci.comp420term.entities.Ability;
-import edu.csuci.comp420term.entities.EggGroup;
-import edu.csuci.comp420term.entities.Pokemon;
-import edu.csuci.comp420term.entities.Type;
+import edu.csuci.comp420term.entities.*;
 
 import java.io.FileWriter;
 import java.io.IOException;
@@ -26,13 +23,24 @@ public class PokemonGeneratorClient {
 
         final Set<Ability> abilities = new TreeSet<>(Comparator.comparing(ability -> ability.id));
         final Set<EggGroup> eggGroups = new TreeSet<>(Comparator.comparing(eggGroup -> eggGroup.id));
-        for (Pokemon pokemonObject : pokemons) {
-            abilities.add(pokemonObject.primaryAbility);
-            pokemonObject.getSecondaryAbility().ifPresent(abilities::add);
-            pokemonObject.getHiddenAbility().ifPresent(abilities::add);
+        final Set<Stat> stats = new TreeSet<>(Comparator.comparing(stat -> stat.id));
+        final Set<Nature> natures = new TreeSet<>(Comparator.comparing(nature -> nature.id));
+        for (Pokemon pokemon : pokemons) {
+            abilities.add(pokemon.primaryAbility);
+            pokemon.getSecondaryAbility().ifPresent(abilities::add);
+            pokemon.getHiddenAbility().ifPresent(abilities::add);
 
-            eggGroups.add(pokemonObject.primaryEggGroup);
-            pokemonObject.getSecondaryEggGroup().ifPresent(eggGroups::add);
+            eggGroups.add(pokemon.primaryEggGroup);
+            pokemon.getSecondaryEggGroup().ifPresent(eggGroups::add);
+
+            final List<Stat> pokemonStats = pokemon.baseStats.stream().map(baseStat -> baseStat.stat).collect(Collectors.toList());
+            stats.addAll(pokemonStats);
+            final List<Nature> pokemonNatures = pokemonStats.stream()
+                    .map(stat -> List.of(stat.increasingNatures, stat.decreasingNatures))
+                    .flatMap(List::stream)
+                    .flatMap(List::stream)
+                    .collect(Collectors.toList());
+            natures.addAll(pokemonNatures);
         }
 
         final Set<Type> types = new TreeSet<>(Comparator.comparing(type -> type.id));
@@ -42,29 +50,51 @@ public class PokemonGeneratorClient {
         final List<String> insertAbilitySQLStatements = new ArrayList<>();
         final List<String> insertTypeSqlStatements = new ArrayList<>();
         final List<String> insertPokemonSQLStatements = new ArrayList<>();
+        final List<String> insertNatureSQLStatements = new ArrayList<>();
+        final List<String> insertStatSQLStatements = new ArrayList<>();
+        final List<String> insertNatureStatSqlStatements = new ArrayList<>();
+        final List<String> insertBaseStatSQLStatements = new ArrayList<>();
 
         try (Connection connection = ConnectionBuilder.buildConnection();
              PreparedStatement insertEggGroup = connection.prepareStatement("INSERT INTO EGG_GROUP(EGG_GROUP_ID, EGG_GROUP_NAME) VALUE (?, ?);");
              PreparedStatement insertAbility = connection.prepareStatement("INSERT INTO ABILITY(ABILITY_ID, ABILITY_NAME, ABILITY_EFFECT) VALUES (?, ?, ?);");
              PreparedStatement insertType = connection.prepareStatement("INSERT INTO TYPE(TYPE_ID, TYPE_NAME, TYPE_COLOR_HEX) VALUE (?, ?, ?);");
+             PreparedStatement insertNature = connection.prepareStatement("INSERT INTO NATURE(NATURE_ID, NATURE_NAME) VALUE (?, ?);");
+             PreparedStatement insertStat = connection.prepareStatement("INSERT INTO STAT(STAT_ID, STAT_NAME) VALUE (?, ?);");
+             PreparedStatement insertNatureStat = connection.prepareStatement("INSERT INTO NATURE_STAT(NATURE_ID, STAT_ID, STAT_MULTIPLIER) VALUE (?, ?, ?);");
              PreparedStatement insertPokemon = connection.prepareStatement("INSERT INTO POKEMON(POKEMON_ID, PRIMARY_TYPE, SECONDARY_TYPE, PRIMARY_EGG_GROUP, SECONDARY_EGG_GROUP, PRIMARY_ABILITY,\r\n" +
                      "                    SECONDARY_ABILITY, HIDDEN_ABILITY, POKEMON_NAME, POKEMON_DESCRIPTION,\r\n" +
-                     "                    POKEMON_IMAGE_URL) VALUE (?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?);")) {
+                     "                    POKEMON_IMAGE_URL) VALUE (?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?);");
+             PreparedStatement insertBaseStat = connection.prepareStatement("INSERT INTO BASE_STAT(STAT_ID, POKEMON_ID, STAT_VALUE) VALUE (?, ?, ?);")) {
             addAllEggGroupInsertStatements(eggGroups, insertEggGroupSQLStatements, insertEggGroup);
             addAllAbilityInsertStatements(abilities, insertAbilitySQLStatements, insertAbility);
+            addAllTypeInsertStatements(types, insertTypeSqlStatements, insertType);
+            addAllNaturesIntoInsertStatements(natures, insertNatureSQLStatements, insertNature);
+            addAllStatsIntoInsertStatements(stats, insertStatSQLStatements, insertNatureStatSqlStatements, insertStat, insertNatureStat);
 
-            for (Type type : types) {
-                insertType.setInt(1, type.id);
-                insertType.setString(2, type.name);
-                insertType.setString(3, type.colorHex);
-                insertTypeSqlStatements.add(getInsertSQL(insertType));
+            for (Pokemon pokemon : pokemons) {
+                insertPokemon.setInt(1, pokemon.id);
+                insertPokemon.setInt(2, pokemon.primaryType.id);
+                setOptionalIntField(insertPokemon, 3, pokemon::getSecondaryType, type -> type.id);
+                insertPokemon.setInt(4, pokemon.primaryEggGroup.id);
+                setOptionalIntField(insertPokemon, 5, pokemon::getSecondaryEggGroup, eggGroup -> eggGroup.id);
+                insertPokemon.setInt(6, pokemon.primaryAbility.id);
+                setOptionalIntField(insertPokemon, 7, pokemon::getSecondaryAbility, ability -> ability.id);
+                setOptionalIntField(insertPokemon, 8, pokemon::getHiddenAbility, ability -> ability.id);
+                insertPokemon.setString(9, pokemon.name);
+                insertPokemon.setString(10, pokemon.description);
+                insertPokemon.setString(11, pokemon.imageFilePath);
+                insertPokemonSQLStatements.add(getInsertSQL(insertPokemon));
+                addAllBaseStatsToInsertStatements(insertBaseStatSQLStatements, insertBaseStat, pokemon);
             }
-
-            addAllPokemonInsertStatements(pokemons, insertPokemonSQLStatements, insertPokemon);
 
         }
 
         final String deleteStatements = "DELETE\r\n" +
+                "FROM BASE_STAT\r\n" +
+                "WHERE TRUE;\r\n" +
+                "\r\n" +
+                "DELETE\r\n" +
                 "FROM POKEMON\r\n" +
                 "WHERE TRUE;\r\n" +
                 "\r\n" +
@@ -82,6 +112,18 @@ public class PokemonGeneratorClient {
                 "\r\n" +
                 "DELETE\r\n" +
                 "FROM ABILITY\r\n" +
+                "WHERE TRUE;\r\n" +
+                "\r\n" +
+                "DELETE\r\n" +
+                "FROM NATURE_STAT\r\n" +
+                "WHERE TRUE;\r\n" +
+                "\r\n" +
+                "DELETE\r\n" +
+                "FROM NATURE\r\n" +
+                "WHERE TRUE;\r\n" +
+                "\r\n" +
+                "DELETE\r\n" +
+                "FROM STAT\r\n" +
                 "WHERE TRUE;\r\n";
 
         String sqlFileContent = "USE pokemondb;\r\n" +
@@ -96,11 +138,84 @@ public class PokemonGeneratorClient {
                 "\r\n" +
                 TypeEffectivenessGenerator.generateTypeEffectivenessInsertSQL() +
                 "\r\n" +
-                insertStatementListToSingleString(insertPokemonSQLStatements);
+                insertStatementListToSingleString(insertNatureSQLStatements) +
+                "\r\n" +
+                insertStatementListToSingleString(insertStatSQLStatements) +
+                "\r\n" +
+                insertStatementListToSingleString(insertNatureStatSqlStatements) +
+                "\r\n" +
+                insertStatementListToSingleString(insertPokemonSQLStatements) +
+                "\r\n" +
+                insertStatementListToSingleString(insertBaseStatSQLStatements);
 
         try (FileWriter sqlFileWriter = new FileWriter(SQL_FILE_NAME, StandardCharsets.UTF_8)) {
             sqlFileWriter.write(sqlFileContent);
         }
+    }
+
+    private static void addAllBaseStatsToInsertStatements(List<String> insertBaseStatSQLStatements, PreparedStatement insertBaseStat, Pokemon pokemon) throws SQLException {
+        for (BaseStat baseStat : pokemon.baseStats) {
+            addBaseStatToInsertStatements(insertBaseStatSQLStatements, insertBaseStat, pokemon, baseStat);
+        }
+    }
+
+    private static void addBaseStatToInsertStatements(List<String> insertBaseStatSQLStatements, PreparedStatement insertBaseStat, Pokemon pokemon, BaseStat baseStat) throws SQLException {
+        insertBaseStat.setInt(1, baseStat.stat.id);
+        insertBaseStat.setInt(2, pokemon.id);
+        insertBaseStat.setInt(3, baseStat.statValue);
+        insertBaseStatSQLStatements.add(getInsertSQL(insertBaseStat));
+    }
+
+    private static void addAllNaturesIntoInsertStatements(Set<Nature> natures, List<String> insertNatureSQLStatements, PreparedStatement insertNature) throws SQLException {
+        for (Nature nature : natures) {
+            insertNatureIntoInsertStatement(insertNatureSQLStatements, insertNature, nature);
+        }
+    }
+
+    private static void insertNatureIntoInsertStatement(List<String> insertNatureSQLStatements, PreparedStatement insertNature, Nature nature) throws SQLException {
+        insertNature.setInt(1, nature.id);
+        insertNature.setString(2, nature.name);
+        insertNatureSQLStatements.add(getInsertSQL(insertNature));
+    }
+
+    private static void addAllStatsIntoInsertStatements(Set<Stat> stats, List<String> insertStatSQLStatements, List<String> insertNatureStatSqlStatements, PreparedStatement insertStat, PreparedStatement insertNatureStat) throws SQLException {
+        for (Stat stat : stats) {
+            insertStatIntoInsertStatements(insertStatSQLStatements, insertNatureStatSqlStatements, insertStat, insertNatureStat, stat);
+        }
+    }
+
+    private static void insertStatIntoInsertStatements(List<String> insertStatSQLStatements, List<String> insertNatureStatSqlStatements, PreparedStatement insertStat, PreparedStatement insertNatureStat, Stat stat) throws SQLException {
+        insertStat.setInt(1, stat.id);
+        insertStat.setString(2, stat.name);
+        insertStatSQLStatements.add(getInsertSQL(insertStat));
+        addAllNatureStatsToInsertStatements(insertNatureStatSqlStatements, insertNatureStat, stat, 1.1, stat.increasingNatures);
+        addAllNatureStatsToInsertStatements(insertNatureStatSqlStatements, insertNatureStat, stat, 0.9, stat.decreasingNatures);
+    }
+
+    private static void addAllNatureStatsToInsertStatements(List<String> insertNatureStatSqlStatements, PreparedStatement insertNatureStat, Stat stat, double statModifier, List<Nature> natureStats) throws SQLException {
+        for (Nature natureStat : natureStats) {
+            addNatureStatToInsertStatements(insertNatureStatSqlStatements, insertNatureStat, stat, statModifier, natureStat);
+        }
+    }
+
+    private static void addNatureStatToInsertStatements(List<String> insertNatureStatSqlStatements, PreparedStatement insertNatureStat, Stat stat, double statModifier, Nature natureStat) throws SQLException {
+        insertNatureStat.setInt(1, natureStat.id);
+        insertNatureStat.setInt(2, stat.id);
+        insertNatureStat.setDouble(3, statModifier);
+        insertNatureStatSqlStatements.add(getInsertSQL(insertNatureStat));
+    }
+
+    private static void addAllTypeInsertStatements(Set<Type> types, List<String> insertTypeSqlStatements, PreparedStatement insertType) throws SQLException {
+        for (Type type : types) {
+            addTypeToInsertStatements(insertTypeSqlStatements, insertType, type);
+        }
+    }
+
+    private static void addTypeToInsertStatements(List<String> insertTypeSqlStatements, PreparedStatement insertType, Type type) throws SQLException {
+        insertType.setInt(1, type.id);
+        insertType.setString(2, type.name);
+        insertType.setString(3, type.colorHex);
+        insertTypeSqlStatements.add(getInsertSQL(insertType));
     }
 
     private static List<Pokemon> getPokemons() throws InterruptedException {
@@ -129,12 +244,6 @@ public class PokemonGeneratorClient {
         return pokemons;
     }
 
-    private static void addAllPokemonInsertStatements(List<Pokemon> pokemons, List<String> insertPokemonSQLStatements, PreparedStatement insertPokemon) throws SQLException {
-        for (Pokemon pokemon : pokemons) {
-            addPokemonInsertStatement(insertPokemonSQLStatements, insertPokemon, pokemon);
-        }
-    }
-
     private static void addAllAbilityInsertStatements(Set<Ability> abilities, List<String> insertAbilitySQLStatements, PreparedStatement insertAbility) throws SQLException {
         for (Ability ability : abilities) {
             addAbilityInsertStatement(insertAbilitySQLStatements, insertAbility, ability);
@@ -145,21 +254,6 @@ public class PokemonGeneratorClient {
         for (EggGroup eggGroup : eggGroups) {
             addEggGroupInsertStatement(insertEggGroupSQLStatements, insertEggGroup, eggGroup);
         }
-    }
-
-    private static void addPokemonInsertStatement(List<String> insertPokemonSQLStatements, PreparedStatement insertPokemon, Pokemon pokemon) throws SQLException {
-        insertPokemon.setInt(1, pokemon.id);
-        insertPokemon.setInt(2, pokemon.primaryType.id);
-        setOptionalIntField(insertPokemon, 3, pokemon::getSecondaryType, type -> type.id);
-        insertPokemon.setInt(4, pokemon.primaryEggGroup.id);
-        setOptionalIntField(insertPokemon, 5, pokemon::getSecondaryEggGroup, eggGroup -> eggGroup.id);
-        insertPokemon.setInt(6, pokemon.primaryAbility.id);
-        setOptionalIntField(insertPokemon, 7, pokemon::getSecondaryAbility, ability -> ability.id);
-        setOptionalIntField(insertPokemon, 8, pokemon::getHiddenAbility, ability -> ability.id);
-        insertPokemon.setString(9, pokemon.name);
-        insertPokemon.setString(10, pokemon.description);
-        insertPokemon.setString(11, pokemon.imageFilePath);
-        insertPokemonSQLStatements.add(getInsertSQL(insertPokemon));
     }
 
     private static void addAbilityInsertStatement(List<String> insertAbilitySQLStatements, PreparedStatement insertAbility, Ability ability) throws SQLException {

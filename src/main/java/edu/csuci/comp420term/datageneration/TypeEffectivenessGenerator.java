@@ -35,7 +35,7 @@ public class TypeEffectivenessGenerator {
             addDamageRelationToResultList(typeNameToId, attackTypeId, damageRelations, result,
                     "no_damage_to", 0);
             return result;
-        } catch (IOException e) {
+        } catch (IOException | InterruptedException e) {
             e.printStackTrace();
         }
         return new ArrayList<>();

@@ -1,18 +1,12 @@
 package edu.csuci.comp420term.datageneration;
 
-import edu.csuci.comp420term.entities.Ability;
-import edu.csuci.comp420term.entities.EggGroup;
-import edu.csuci.comp420term.entities.Pokemon;
-import edu.csuci.comp420term.entities.Type;
+import edu.csuci.comp420term.entities.*;
 import org.apache.commons.text.WordUtils;
 import org.json.JSONArray;
 import org.json.JSONObject;
 
 import java.io.IOException;
-import java.util.HashMap;
-import java.util.List;
-import java.util.Map;
-import java.util.Optional;
+import java.util.*;
 import java.util.function.Predicate;
 
 import static edu.csuci.comp420term.datageneration.JSONApiHelpers.fetchAPICall;
@@ -57,20 +51,7 @@ public class PokemonGenerator {
 
         final String description = getDescription(speciesJSON);
 
-
-
-        final JSONObject pokemonRowData = new JSONObject();
-        pokemonRowData.put("id", this.pokedexId);
-        pokemonRowData.put("name", pokemonName);
-        pokemonRowData.put("primary_type", primaryType.toJSON());
-        secondaryType.ifPresent(type -> pokemonRowData.put("secondary_type", type.toJSON()));
-        pokemonRowData.put("primary_egg_group", primaryEggGroup.toJSON());
-        secondaryEggGroup.ifPresent(eggGroup -> pokemonRowData.put("secondary_egg_group", eggGroup.toJSON()));
-        pokemonRowData.put("image_file_path", imageUrl);
-        pokemonRowData.put("primary_ability", primaryAbility.toJSON());
-        secondaryAbility.ifPresent(ability -> pokemonRowData.put("secondary_ability", ability.toJSON()));
-        hiddenAbility.ifPresent(ability -> pokemonRowData.put("hidden_ability", ability.toJSON()));
-        pokemonRowData.put("description", description);
+        final List<BaseStat> baseStats = getBaseStats(pokemonJSON);
         return new Pokemon(
                 this.pokedexId,
                 primaryType,
@@ -82,8 +63,23 @@ public class PokemonGenerator {
                 hiddenAbility.orElse(null),
                 pokemonName,
                 description,
-                imageUrl
-        );
+                imageUrl,
+                baseStats);
+    }
+
+    private List<BaseStat> getBaseStats(JSONObject pokemonJSON) throws IOException, InterruptedException {
+        final JSONArray stats = pokemonJSON.getJSONArray("stats");
+        final List<BaseStat> baseStats = new ArrayList<>();
+        for (int i = 0; i < stats.length(); i++) {
+            JSONObject baseStatJSON = stats.getJSONObject(i);
+            final int baseStatValue = baseStatJSON.getInt("base_stat");
+            final String statURL = baseStatJSON.getJSONObject("stat").getString("url");
+            final StatGenerator statGenerator = new StatGenerator(statURL);
+            final Stat stat = statGenerator.generate();
+            final BaseStat baseStat = new BaseStat(this.pokedexId, stat, baseStatValue);
+            baseStats.add(baseStat);
+        }
+        return baseStats;
     }
 
     private String getDescription(JSONObject speciesJSON) {
@@ -112,11 +108,11 @@ public class PokemonGenerator {
         return officialArtworkJSON.getString("front_default");
     }
 
-    private Optional<EggGroup> optionalEggGroupNameAtIndex(JSONArray eggGroups, int eggGroupIndex) throws IOException {
+    private Optional<EggGroup> optionalEggGroupNameAtIndex(JSONArray eggGroups, int eggGroupIndex) throws IOException, InterruptedException {
         return eggGroups.length() > eggGroupIndex ? Optional.of(eggGroupNameAtIndex(eggGroups, eggGroupIndex)) : Optional.empty();
     }
 
-    private EggGroup eggGroupNameAtIndex(JSONArray eggGroups, int eggGroupIndex) throws IOException {
+    private EggGroup eggGroupNameAtIndex(JSONArray eggGroups, int eggGroupIndex) throws IOException, InterruptedException {
         final JSONObject eggGroup = eggGroups.getJSONObject(eggGroupIndex);
         final EggGroupGenerator eggGroupGenerator = new EggGroupGenerator(eggGroup.getString("url"));
         return eggGroupGenerator.generate();
@@ -133,13 +129,13 @@ public class PokemonGenerator {
         return type.getString("name");
     }
 
-    private JSONObject fetchSpeciesJSON(JSONObject pokemonJSON) throws IOException {
+    private JSONObject fetchSpeciesJSON(JSONObject pokemonJSON) throws IOException, InterruptedException {
         final JSONObject speciesUrlObject = pokemonJSON.getJSONObject("species");
         final String speciesUrl = speciesUrlObject.getString("url");
         return fetchAPICall(speciesUrl);
     }
 
-    private JSONObject fetchPokemonJSON() throws IOException {
+    private JSONObject fetchPokemonJSON() throws IOException, InterruptedException {
         return fetchAPICall(this.mainApiEndpoint);
     }
 

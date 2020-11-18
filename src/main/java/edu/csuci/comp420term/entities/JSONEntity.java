@@ -35,7 +35,7 @@ public abstract class JSONEntity {
         return result;
     }
 
-    public static JSONArray mapCollectionToJSONArray(Collection<JSONEntity> jsonEntities) {
+    public static JSONArray mapCollectionToJSONArray(Collection<? extends JSONEntity> jsonEntities) {
         JSONArray jsonArray = new JSONArray();
         jsonEntities.stream()
                 .map(JSONEntity::toJSON)
