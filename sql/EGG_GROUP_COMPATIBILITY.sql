@@ -18,4 +18,4 @@ BEGIN
 END //
 DELIMITER ;
 
-call egg_group_compatibility(10)
+CALL egg_group_compatibility(10);
