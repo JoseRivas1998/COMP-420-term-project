@@ -44,3 +44,5 @@ BEGIN
     SPEED AS 'SPEED';
 END //
 DELIMITER ;
+
+CALL base_stats_nature(1,5)
