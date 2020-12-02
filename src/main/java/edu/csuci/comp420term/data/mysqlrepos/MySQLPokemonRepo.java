@@ -8,6 +8,7 @@ import edu.csuci.comp420term.utils.EntityCache;
 import edu.csuci.comp420term.utils.OrderedPair;
 
 import java.sql.*;
+import java.time.Duration;
 import java.util.ArrayList;
 import java.util.Comparator;
 import java.util.List;
@@ -28,9 +29,11 @@ public class MySQLPokemonRepo implements PokemonRepository {
     private static final String SELECT_ALL_POKEMON = "SELECT * FROM POKEMON ORDER BY POKEMON_ID";
     public static final String SELECT_FULL_POKEMON_RANGE = "SELECT MIN(POKEMON_ID), MAX(POKEMON_ID) FROM POKEMON;";
     private final EntityCache<Integer, Pokemon> pokemonCache;
+    private final EntityCache<Integer, OrderedPair<Integer>> generationRangeCache;
 
     public MySQLPokemonRepo() {
         pokemonCache = new EntityCache<>();
+        generationRangeCache = new EntityCache<>();
     }
 
     @Override
@@ -194,17 +197,22 @@ public class MySQLPokemonRepo implements PokemonRepository {
         final int start = Integer.min(offset + pageNumber * pageSize, max);
         final int end = Integer.min(start + pageSize - 1, max);
         final OrderedPair<Integer> range = new OrderedPair<>(start, end);
-        System.out.println(range);
         return findWithinRange(range);
     }
 
     private OrderedPair<Integer> generationRange(int generation) throws SQLException {
+        final Optional<OrderedPair<Integer>> cachedRange = generationRangeCache.get(generation);
+        if (cachedRange.isPresent()) {
+            return cachedRange.get();
+        }
         try (Connection connection = ConnectionBuilder.buildConnection();
              CallableStatement callGenerationSP = connection.prepareCall("{CALL search_by_generation(?)}")) {
             callGenerationSP.setInt(1, generation);
             try (ResultSet resultSet = callGenerationSP.executeQuery()) {
                 if (resultSet.next()) {
-                    return buildRangeFromResultSet(resultSet);
+                    final OrderedPair<Integer> generationRange = buildRangeFromResultSet(resultSet);
+                    generationRangeCache.cache(generation, generationRange, Duration.ofHours(1));
+                    return generationRange;
                 }
             }
         }
