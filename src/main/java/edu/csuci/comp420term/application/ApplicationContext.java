@@ -2,8 +2,15 @@ package edu.csuci.comp420term.application;
 
 import edu.csuci.comp420term.data.mysqlrepos.*;
 import edu.csuci.comp420term.repos.*;
+import javafx.geometry.Dimension2D;
+import javafx.scene.Scene;
+import javafx.scene.control.Label;
+import javafx.scene.layout.BorderPane;
+import javafx.stage.Stage;
 
 public final class ApplicationContext {
+
+    public static final int PAGE_SIZE = 50;
 
     private static ApplicationContext applicationContext;
 
@@ -13,6 +20,9 @@ public final class ApplicationContext {
     public final AbilityRepository abilityRepo;
     public final NatureRepository natureRepo;
     public final StatRepository statRepository;
+
+    public Stage mainStage;
+    public Scene mainScene;
 
     private ApplicationContext() {
         this.pokemonRepo = new MySQLPokemonRepo();
@@ -32,6 +42,18 @@ public final class ApplicationContext {
             }
         }
         return applicationContext;
+    }
+
+    public void initialize(Stage mainStage, Dimension2D size) {
+        BorderPane borderPane = new BorderPane();
+        borderPane.setCenter(new Label("Hello World!"));
+        this.mainScene = new Scene(borderPane, size.getWidth(), size.getHeight());
+        this.mainStage = mainStage;
+        this.mainStage.setScene(this.mainScene);
+    }
+
+    public void setTitle(String title) {
+        this.mainStage.setTitle(title);
     }
 
 }
