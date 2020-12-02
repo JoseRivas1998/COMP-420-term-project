@@ -5,8 +5,11 @@ import edu.csuci.comp420term.repos.*;
 import javafx.geometry.Dimension2D;
 import javafx.scene.Scene;
 import javafx.scene.control.Label;
+import javafx.scene.image.Image;
 import javafx.scene.layout.BorderPane;
 import javafx.stage.Stage;
+
+import java.io.InputStream;
 
 public final class ApplicationContext {
 
@@ -50,10 +53,17 @@ public final class ApplicationContext {
         this.mainScene = new Scene(borderPane, size.getWidth(), size.getHeight());
         this.mainStage = mainStage;
         this.mainStage.setScene(this.mainScene);
+        this.mainStage.getIcons().add(getAppIcon());
+    }
+
+    private Image getAppIcon() {
+        return new Image(getClass().getResourceAsStream("/app_icon.png"));
     }
 
     public void setTitle(String title) {
         this.mainStage.setTitle(title);
     }
+
+
 
 }
