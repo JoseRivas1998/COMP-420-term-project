@@ -178,13 +178,17 @@ public class MySQLPokemonRepo implements PokemonRepository {
 
     @Override
     public List<Pokemon> findAll() throws SQLException {
+        return findWithinRange(pokemonRange());
+    }
+
+    private List<Pokemon> findWithinRange(OrderedPair<Integer> range) throws SQLException {
+        if (range.first > range.second) return findWithinRange(OrderedPair.ensureRange(range));
         ApplicationContext.appContext().abilityRepo.findAll();
         ApplicationContext.appContext().eggGroupRepo.findAll();
         ApplicationContext.appContext().typeRepo.findAll();
-        final OrderedPair<Integer> pokemonRange = pokemonRange();
         ExecutorService threadPool = Executors.newFixedThreadPool(Runtime.getRuntime().availableProcessors());
         final List<Pokemon> pokemonList = new ArrayList<>();
-        for (int i = pokemonRange.first; i <= pokemonRange.second; i++) {
+        for (int i = range.first; i <= range.second; i++) {
             final int id = i;
             threadPool.execute(() -> {
                 Optional<Pokemon> pokemonOptional;
@@ -194,8 +198,10 @@ public class MySQLPokemonRepo implements PokemonRepository {
                     pokemonOptional = Optional.empty();
                 }
                 pokemonOptional.ifPresent(pokemon -> {
-                    cachePokemon(pokemon);
-                    pokemonList.add(pokemon);
+                    synchronized (MySQLPokemonRepo.this) {
+                        cachePokemon(pokemon);
+                        pokemonList.add(pokemon);
+                    }
                 });
             });
         }

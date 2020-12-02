@@ -14,6 +14,13 @@ public class OrderedPair<T> {
         this.second = second;
     }
 
+    public static <T extends Comparable<T>> OrderedPair<T> ensureRange(OrderedPair<T> orderedPair) {
+        if(orderedPair.first.compareTo(orderedPair.second) > 0) {
+            return new OrderedPair<>(orderedPair.second, orderedPair.first);
+        }
+        return orderedPair;
+    }
+
     @Override
     public boolean equals(Object obj) {
         boolean result = obj == this;
