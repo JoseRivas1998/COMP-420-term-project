@@ -5,13 +5,17 @@ import edu.csuci.comp420term.data.ConnectionBuilder;
 import edu.csuci.comp420term.entities.*;
 import edu.csuci.comp420term.repos.PokemonRepository;
 import edu.csuci.comp420term.utils.EntityCache;
+import edu.csuci.comp420term.utils.OrderedPair;
 
 import java.sql.*;
-import java.time.Duration;
-import java.time.Instant;
 import java.util.ArrayList;
+import java.util.Comparator;
 import java.util.List;
 import java.util.Optional;
+import java.util.concurrent.Executor;
+import java.util.concurrent.ExecutorService;
+import java.util.concurrent.Executors;
+import java.util.concurrent.TimeUnit;
 
 public class MySQLPokemonRepo implements PokemonRepository {
 
@@ -43,6 +47,7 @@ public class MySQLPokemonRepo implements PokemonRepository {
                 cachePokemon(pokemon);
                 return pokemon;
             }
+
         }
     }
 
@@ -158,21 +163,51 @@ public class MySQLPokemonRepo implements PokemonRepository {
         if (!pokemonResult.next()) throw new SQLException(String.format("Pokemon with id %d could not be found", id));
     }
 
+    private OrderedPair<Integer> pokemonRange() throws SQLException {
+        try (Connection connection = ConnectionBuilder.buildConnection();
+             PreparedStatement selectStatement = connection.prepareStatement("SELECT MIN(POKEMON_ID), MAX(POKEMON_ID) FROM POKEMON;");
+             ResultSet resultSet = selectStatement.executeQuery()) {
+            if (resultSet.next()) {
+                final int min = resultSet.getInt(1);
+                final int max = resultSet.getInt(2);
+                return new OrderedPair<>(min, max);
+            }
+        }
+        return new OrderedPair<>(-1, -1);
+    }
+
     @Override
     public List<Pokemon> findAll() throws SQLException {
         ApplicationContext.appContext().abilityRepo.findAll();
         ApplicationContext.appContext().eggGroupRepo.findAll();
         ApplicationContext.appContext().typeRepo.findAll();
-        try (Connection connection = ConnectionBuilder.buildConnection();
-             PreparedStatement selectStatement = connection.prepareStatement(SELECT_ALL_POKEMON);
-             ResultSet resultSet = selectStatement.executeQuery()) {
-            List<Pokemon> pokemonList = new ArrayList<>();
-            while (resultSet.next()) {
-                final Pokemon pokemon = buildPokemonFromResultSet(connection, resultSet);
-                cachePokemon(pokemon);
-                pokemonList.add(pokemon);
-            }
-            return pokemonList;
+        final OrderedPair<Integer> pokemonRange = pokemonRange();
+        ExecutorService threadPool = Executors.newFixedThreadPool(Runtime.getRuntime().availableProcessors());
+        final List<Pokemon> pokemonList = new ArrayList<>();
+        for (int i = pokemonRange.first; i <= pokemonRange.second; i++) {
+            final int id = i;
+            threadPool.execute(() -> {
+                Optional<Pokemon> pokemonOptional;
+                try {
+                    pokemonOptional = Optional.of(findById(id));
+                } catch (Exception e) {
+                    pokemonOptional = Optional.empty();
+                }
+                pokemonOptional.ifPresent(pokemon -> {
+                    cachePokemon(pokemon);
+                    pokemonList.add(pokemon);
+                });
+            });
         }
+        try {
+            threadPool.shutdown();
+            if (!threadPool.awaitTermination(Long.MAX_VALUE, TimeUnit.MILLISECONDS)) {
+                threadPool.shutdownNow();
+            }
+        } catch (InterruptedException e) {
+            threadPool.shutdownNow();
+        }
+        pokemonList.sort(Comparator.comparing(pokemon -> pokemon.id));
+        return pokemonList;
     }
 }
