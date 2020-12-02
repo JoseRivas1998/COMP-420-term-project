@@ -25,4 +25,6 @@ BEGIN
 END //
 DELIMITER ;
 
-CALL type_effectiveness(10,11,1)
+CALL type_effectiveness(10,11,12);
+CALL type_effectiveness(11, 10, NULL);
+CALL type_effectiveness(11, 10, 6);
