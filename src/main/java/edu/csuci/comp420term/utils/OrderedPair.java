@@ -39,4 +39,9 @@ public class OrderedPair<T> {
     public int hashCode() {
         return Objects.hash(first, second);
     }
+
+    @Override
+    public String toString() {
+        return String.format("(%s, %s)", this.first, this.second);
+    }
 }

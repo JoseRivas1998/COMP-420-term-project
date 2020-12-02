@@ -26,6 +26,7 @@ public class MySQLPokemonRepo implements PokemonRepository {
             "WHERE POKEMON_ID = ?\n" +
             "ORDER BY EVOLVES_INTO_ID;";
     private static final String SELECT_ALL_POKEMON = "SELECT * FROM POKEMON ORDER BY POKEMON_ID";
+    public static final String SELECT_FULL_POKEMON_RANGE = "SELECT MIN(POKEMON_ID), MAX(POKEMON_ID) FROM POKEMON;";
     private final EntityCache<Integer, Pokemon> pokemonCache;
 
     public MySQLPokemonRepo() {
@@ -165,27 +166,70 @@ public class MySQLPokemonRepo implements PokemonRepository {
 
     private OrderedPair<Integer> pokemonRange() throws SQLException {
         try (Connection connection = ConnectionBuilder.buildConnection();
-             PreparedStatement selectStatement = connection.prepareStatement("SELECT MIN(POKEMON_ID), MAX(POKEMON_ID) FROM POKEMON;");
+             PreparedStatement selectStatement = connection.prepareStatement(SELECT_FULL_POKEMON_RANGE);
              ResultSet resultSet = selectStatement.executeQuery()) {
             if (resultSet.next()) {
-                final int min = resultSet.getInt(1);
-                final int max = resultSet.getInt(2);
-                return new OrderedPair<>(min, max);
+                return buildRangeFromResultSet(resultSet);
+            }
+        }
+        return new OrderedPair<>(-1, -1);
+    }
+
+    private OrderedPair<Integer> buildRangeFromResultSet(ResultSet resultSet) throws SQLException {
+        final int min = resultSet.getInt(1);
+        final int max = resultSet.getInt(2);
+        return new OrderedPair<>(min, max);
+    }
+
+    @Override
+    public List<Pokemon> findAll() throws SQLException {
+        ApplicationContext.appContext().abilityRepo.findAll();
+        ApplicationContext.appContext().eggGroupRepo.findAll();
+        ApplicationContext.appContext().typeRepo.findAll();
+        return findWithinRange(pokemonRange());
+    }
+
+    @Override
+    public List<Pokemon> findAllInPage(int pageNumber, int pageSize, int offset, int max) throws SQLException {
+        final int start = Integer.min(offset + pageNumber * pageSize, max);
+        final int end = Integer.min(start + pageSize - 1, max);
+        final OrderedPair<Integer> range = new OrderedPair<>(start, end);
+        System.out.println(range);
+        return findWithinRange(range);
+    }
+
+    private OrderedPair<Integer> generationRange(int generation) throws SQLException {
+        try (Connection connection = ConnectionBuilder.buildConnection();
+             CallableStatement callGenerationSP = connection.prepareCall("{CALL search_by_generation(?)}")) {
+            callGenerationSP.setInt(1, generation);
+            try (ResultSet resultSet = callGenerationSP.executeQuery()) {
+                if (resultSet.next()) {
+                    return buildRangeFromResultSet(resultSet);
+                }
             }
         }
         return new OrderedPair<>(-1, -1);
     }
 
     @Override
-    public List<Pokemon> findAll() throws SQLException {
-        return findWithinRange(pokemonRange());
+    public List<Pokemon> findAllInGeneration(int generation) throws SQLException {
+        final OrderedPair<Integer> generationRange = generationRange(generation);
+        return findWithinRange(generationRange);
+    }
+
+    @Override
+    public List<Pokemon> findAllInGenerationPage(int generation, int pageNumber, int pageSize) throws SQLException {
+        final OrderedPair<Integer> generationRange = generationRange(generation);
+        return findAllInPage(pageNumber, pageSize, generationRange.first, generationRange.second);
+    }
+
+    @Override
+    public int pagesInGeneration(int generation, int pageSize) throws SQLException {
+        return this.pagesInRange(generationRange(generation), pageSize);
     }
 
     private List<Pokemon> findWithinRange(OrderedPair<Integer> range) throws SQLException {
         if (range.first > range.second) return findWithinRange(OrderedPair.ensureRange(range));
-        ApplicationContext.appContext().abilityRepo.findAll();
-        ApplicationContext.appContext().eggGroupRepo.findAll();
-        ApplicationContext.appContext().typeRepo.findAll();
         ExecutorService threadPool = Executors.newFixedThreadPool(Runtime.getRuntime().availableProcessors());
         final List<Pokemon> pokemonList = new ArrayList<>();
         for (int i = range.first; i <= range.second; i++) {

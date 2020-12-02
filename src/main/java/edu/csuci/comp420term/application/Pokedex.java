@@ -12,10 +12,21 @@ import java.util.concurrent.TimeUnit;
 
 public class Pokedex {
 
+    public static final int PAGE_SIZE = 50;
+
     public static void main(String[] args) {
         try {
             final PokemonRepository pokemonRepo = ApplicationContext.appContext().pokemonRepo;
-            testAllPokemon(pokemonRepo);
+            testAllPages(pokemonRepo);
+            testAllPages(pokemonRepo);
+//            testGenerationPage(pokemonRepo, 1, 0);
+//            testGenerationPage(pokemonRepo, 1, 1);
+//            testGenerationPage(pokemonRepo, 3, 2);
+//            testGeneration(pokemonRepo, 1);
+//            testGeneration(pokemonRepo, 3);
+//            testPagination(pokemonRepo, 0);
+//            testPagination(pokemonRepo, 1);
+//            testAllPokemon(pokemonRepo);
 //            testAllPokemon(pokemonRepo);
 //            testPokemon(pokemonRepo, "BULBASAUR", 1);
 //            testPokemon(pokemonRepo, "IVYSAUR", 2);
@@ -30,10 +41,47 @@ public class Pokedex {
         }
     }
 
+    private static void testAllPages(PokemonRepository pokemonRepo) throws SQLException {
+        for (int generation = 1; generation <= 7; generation++) {
+            final int pages = pokemonRepo.pagesInGeneration(generation, PAGE_SIZE);
+            for (int page = 0; page < pages; page++) {
+                testGenerationPage(pokemonRepo, generation, page);
+            }
+        }
+    }
+
     private static void testAllPokemon(PokemonRepository pokemonRepo) throws SQLException {
         System.out.println("GETTING ALL POKEMON");
         final Instant start = Instant.now();
         final List<Pokemon> allPokemon = pokemonRepo.findAll();
+        final Duration duration = Duration.between(start, Instant.now());
+        final double seconds = durationSeconds(duration);
+        System.out.printf("Found %d pokemon in %f seconds.\n", allPokemon.size(), seconds);
+    }
+
+    private static void testGenerationPage(PokemonRepository pokemonRepo, int generation, int pageNumber) throws SQLException {
+        System.out.println("TESTING PAGING: PAGE " + pageNumber + " FOR GENERATION " + generation);
+        final Instant start = Instant.now();
+        final List<Pokemon> allPokemon = pokemonRepo.findAllInGenerationPage(generation, pageNumber, PAGE_SIZE);
+        final Duration duration = Duration.between(start, Instant.now());
+        final double seconds = durationSeconds(duration);
+        System.out.printf("Found %d pokemon in %f seconds.\n", allPokemon.size(), seconds);
+    }
+
+    private static void testGeneration(PokemonRepository pokemonRepo, int generation) throws SQLException {
+        System.out.println("GETTING ALL POKEMON FROM GEN " + generation);
+        final Instant start = Instant.now();
+        final List<Pokemon> allPokemon = pokemonRepo.findAllInGeneration(generation);
+        final Duration duration = Duration.between(start, Instant.now());
+        final double seconds = durationSeconds(duration);
+        System.out.printf("Found %d pokemon in %f seconds.\n", allPokemon.size(), seconds);
+    }
+
+
+    private static void testPagination(PokemonRepository pokemonRepo, int pageNumber) throws SQLException {
+        System.out.println("TESTING PAGING: PAGE " + pageNumber);
+        final Instant start = Instant.now();
+        final List<Pokemon> allPokemon = pokemonRepo.findAllInPage(pageNumber, PAGE_SIZE);
         final Duration duration = Duration.between(start, Instant.now());
         final double seconds = durationSeconds(duration);
         System.out.printf("Found %d pokemon in %f seconds.\n", allPokemon.size(), seconds);
