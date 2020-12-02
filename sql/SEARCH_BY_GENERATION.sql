@@ -41,10 +41,7 @@ BEGIN
         SET max_id = 898;
     END IF;
 
-    SELECT *
-    FROM POKEMON
-    WHERE POKEMON_ID >= min_id
-      AND POKEMON_ID <= max_id;
+    SELECT min_id, max_id;
 END //
 DELIMITER ;
 
