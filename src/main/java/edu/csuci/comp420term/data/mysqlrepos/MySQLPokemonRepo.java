@@ -88,7 +88,7 @@ public class MySQLPokemonRepo implements PokemonRepository {
         try (PreparedStatement selectStatement = connection.prepareStatement(SELECT_EVOLUTION_METHODS)) {
             selectStatement.setInt(1, pokemonId);
             try (ResultSet resultSet = selectStatement.executeQuery()) {
-                while(resultSet.next()) {
+                while (resultSet.next()) {
                     evolutionMethods.add(buildEvolutionMethodFromResultSet(resultSet));
                 }
             }
@@ -160,16 +160,12 @@ public class MySQLPokemonRepo implements PokemonRepository {
 
     @Override
     public List<Pokemon> findAll() throws SQLException {
-        System.out.println("GETTING ALL COMMON DATA");
-        final Instant start = Instant.now();
         ApplicationContext.appContext().abilityRepo.findAll();
         ApplicationContext.appContext().eggGroupRepo.findAll();
         ApplicationContext.appContext().typeRepo.findAll();
-        final Duration duration = Duration.between(start, Instant.now());
-        System.out.println("COMMON DATA DONE IN " + duration.toMillis() + "ms");
         try (Connection connection = ConnectionBuilder.buildConnection();
-        PreparedStatement selectStatement = connection.prepareStatement(SELECT_ALL_POKEMON);
-        ResultSet resultSet = selectStatement.executeQuery()) {
+             PreparedStatement selectStatement = connection.prepareStatement(SELECT_ALL_POKEMON);
+             ResultSet resultSet = selectStatement.executeQuery()) {
             List<Pokemon> pokemonList = new ArrayList<>();
             while (resultSet.next()) {
                 final Pokemon pokemon = buildPokemonFromResultSet(connection, resultSet);
