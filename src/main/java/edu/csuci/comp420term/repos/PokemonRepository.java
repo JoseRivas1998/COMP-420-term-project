@@ -9,7 +9,7 @@ public interface PokemonRepository {
 
     Pokemon findById(final int id) throws SQLException;
 
-    List<Pokemon> findAll();
+    List<Pokemon> findAll() throws SQLException;
 
 
 
