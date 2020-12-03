@@ -2,6 +2,7 @@ package edu.csuci.comp420term.application;
 
 import edu.csuci.comp420term.application.containers.MainPane;
 import edu.csuci.comp420term.application.containers.PokemonGenerationPaginator;
+import edu.csuci.comp420term.data.BCryptAuthenticator;
 import edu.csuci.comp420term.data.ImageLoader;
 import edu.csuci.comp420term.data.mysqlrepos.*;
 import edu.csuci.comp420term.repos.*;
@@ -24,6 +25,8 @@ public final class ApplicationContext {
     public final NatureRepository natureRepo;
     public final StatRepository statRepository;
     public final ImageLoader imageLoader;
+    public final Authenticator authenticator;
+    public final UserRepository userRepo;
 
     public Stage mainStage;
     public Scene mainScene;
@@ -36,7 +39,9 @@ public final class ApplicationContext {
         this.abilityRepo = new MySQLAbilityRepository();
         this.natureRepo = new MySQLNatureRepository();
         this.statRepository = new MySQLStatRepository();
-        imageLoader = new ImageLoader();
+        this.imageLoader = new ImageLoader();
+        this.authenticator = new BCryptAuthenticator();
+        this.userRepo = new MySQLUserRepository();
     }
 
     public static ApplicationContext appContext() {
