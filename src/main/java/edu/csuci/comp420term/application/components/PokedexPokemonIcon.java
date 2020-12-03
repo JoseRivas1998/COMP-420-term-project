@@ -1,6 +1,7 @@
 package edu.csuci.comp420term.application.components;
 
 import edu.csuci.comp420term.application.ApplicationContext;
+import edu.csuci.comp420term.application.containers.PokemonPage;
 import edu.csuci.comp420term.entities.Pokemon;
 import javafx.beans.property.Property;
 import javafx.geometry.HPos;
@@ -48,7 +49,8 @@ public class PokedexPokemonIcon extends GridPane {
         imageView.setFitWidth(200);
 
         imageView.setOnMouseClicked(event -> {
-            System.out.println(pokemon.name);
+            final PokemonPage pokemonPage = new PokemonPage(pokemon);
+            ApplicationContext.appContext().mainPane.setCenter(pokemonPage);
         });
         imageView.setStyle("-fx-cursor: hand;");
 

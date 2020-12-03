@@ -4,9 +4,16 @@ import javafx.scene.layout.BorderPane;
 
 public class MainPane extends BorderPane {
 
+    private final PokedexTabPane mainTabPane;
+
     public MainPane() {
         super();
-        setCenter(new PokedexTabPane());
+        mainTabPane = new PokedexTabPane();
+        goToHome();
+    }
+
+    public void goToHome() {
+        setCenter(mainTabPane);
     }
 
 }
