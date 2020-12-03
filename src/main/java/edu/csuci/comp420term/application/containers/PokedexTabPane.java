@@ -13,6 +13,7 @@ public class PokedexTabPane extends TabPane {
                 generationTabPane.initialLoad();
             }
         }
+        getTabs().addAll(new PartyTab());
         getSelectionModel().selectedItemProperty().addListener((observable, oldValue, newValue) -> {
             if (newValue instanceof GenerationTabPane) {
                 ((GenerationTabPane) newValue).initialLoad();

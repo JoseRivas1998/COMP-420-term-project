@@ -4,6 +4,7 @@ import edu.csuci.comp420term.application.ApplicationContext;
 import edu.csuci.comp420term.application.components.EvolutionChain;
 import edu.csuci.comp420term.application.components.StatView;
 import edu.csuci.comp420term.application.components.TypeLabel;
+import edu.csuci.comp420term.application.dialogs.ErrorDialog;
 import edu.csuci.comp420term.data.ImageLoader;
 import edu.csuci.comp420term.entities.*;
 import edu.csuci.comp420term.repos.TypeRepository;
@@ -12,6 +13,7 @@ import javafx.application.Platform;
 import javafx.geometry.HPos;
 import javafx.geometry.Insets;
 import javafx.geometry.Pos;
+import javafx.scene.control.Alert;
 import javafx.scene.control.Button;
 import javafx.scene.control.Label;
 import javafx.scene.control.ScrollPane;
@@ -119,15 +121,55 @@ public class PokemonPage extends ScrollPane {
     private void addSecondColumn(Pokemon pokemon) {
         final Label descriptionLabel = new Label(pokemon.description);
         descriptionLabel.setWrapText(true);
-        final VBox secondColumn = new VBox();
+        final VBox secondColumn = new VBox(ApplicationContext.SPACING / 2);
         secondColumn.getChildren().addAll(descriptionLabel);
         addType(pokemon, secondColumn);
         addTypeEffectivenesses(secondColumn);
         addEvolutionChain(pokemon, secondColumn);
         addAlternateForms(pokemon, secondColumn);
+
+        addPartyButton(pokemon, secondColumn);
+
         secondColumn.setStyle("-fx-background-color: white");
         GridPane.setHgrow(secondColumn, Priority.ALWAYS);
         layout.add(secondColumn, 1, 2);
+    }
+
+    private void addPartyButton(Pokemon pokemon, VBox secondColumn) {
+        final Button addToParty = new Button("Add to Party!");
+        addToParty.setOnAction(event -> {
+            addToParty.setDisable(true);
+            addToPartyAsync(pokemon, addToParty);
+        });
+        secondColumn.getChildren().addAll(addToParty);
+    }
+
+    private void addToPartyAsync(Pokemon pokemon, Button addToParty) {
+        new Thread(() -> addPokemonToParty(pokemon, addToParty)).start();
+    }
+
+    private void addPokemonToParty(Pokemon pokemon, Button addToParty) {
+        final ApplicationContext appContext = ApplicationContext.appContext();
+        try {
+            final String username = appContext.userRepo.currentUser();
+            appContext.partyRepo.addToParty(username, this.pokemon);
+            Platform.runLater(() -> {
+                final Alert alert = new Alert(Alert.AlertType.INFORMATION);
+                alert.setTitle("Pokemon Added");
+                alert.setHeaderText(pokemon.name + " was added to your party!");
+                alert.setContentText(null);
+                alert.initOwner(appContext.mainStage);
+                alert.showAndWait();
+                addToParty.setDisable(false);
+            });
+        } catch (Exception throwables) {
+            Platform.runLater(() -> {
+                ErrorDialog errorDialog = new ErrorDialog(throwables);
+                errorDialog.initOwner(appContext.mainStage);
+                errorDialog.showAndWait();
+                addToParty.setDisable(false);
+            });
+        }
     }
 
     private void addFirstColumn(Pokemon pokemon) {
